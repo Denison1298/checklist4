@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist e Atendimentos</title>
+    <link rel="icon" href="https://www.peeringdb.com/m/2.48.0/logos_user_supplied/org-9490-6e8a7518.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Checklist e Atendimentos</h1>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
+        <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
+        <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
+    </div>
+
+    <div id="checklist" class="tab-content active">
+        <h2>Checklist de Atendimentos</h2>
+
+        <h3>Atendimento Interno</h3>
+        <div class="checklist-item">
+            <input type="checkbox" id="confirmarClienteInterno">
+            <label for="confirmarClienteInterno">Confirmar o cliente (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="retirouEquipamentoInterno">
+            <label for="retirouEquipamentoInterno">Questionar se retirou equipamento (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="fotoLacreONUInterno">
+            <label for="fotoLacreONUInterno">Foto do lacre na ONU (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="fotoAmplaInterno">
+            <label for="fotoAmplaInterno">Foto ampla (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sinalInterno">
+            <label for="sinalInterno">Sinal interno (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="testeVelocidadeInterno">
+            <label for="testeVelocidadeInterno">Teste de velocidade (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="patrimonioEquipamentosInterno">
+            <label for="patrimonioEquipamentosInterno">Patrimônio dos equipamentos (Interno)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="acessoRemotoInterno">
+            <label for="acessoRemotoInterno">Acesso remoto (Interno)</label>
+        </div>
+
+        <!-- Campo e botão para enviar Atendimento Interno -->
+        <div>
+            <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
+            <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
+        </div>
+
+        <h3>Atendimento Externo</h3>
+        <div class="checklist-item">
+            <input type="checkbox" id="confirmarClienteExterno">
+            <label for="confirmarClienteExterno">Confirmar o cliente (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="retirouEquipamentoExterno">
+            <label for="retirouEquipamentoExterno">Questionar se retirou equipamento (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="fotoLacreONUExterno">
+            <label for="fotoLacreONUExterno">Foto do lacre na ONU (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="fotoCTOExterno">
+            <label for="fotoCTOExterno">Foto da CTO (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="idCTOExterno">
+            <label for="idCTOExterno">ID na CTO (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="fotoAmplaExterno">
+            <label for="fotoAmplaExterno">Foto ampla (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sinalInternoExterno">
+            <label for="sinalInternoExterno">Sinal interno (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sinalExternoExterno">
+            <label for="sinalExternoExterno">Sinal externo (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="testeVelocidadeExterno">
+            <label for="testeVelocidadeExterno">Teste de velocidade (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="patrimonioEquipamentosExterno">
+            <label for="patrimonioEquipamentosExterno">Patrimônio dos equipamentos (Externo)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="acessoRemotoExterno">
+            <label for="acessoRemotoExterno">Acesso remoto (Externo)</label>
+        </div>
+
+        <!-- Campo e botão para enviar Atendimento Externo -->
+        <div>
+            <input type="text" id="protocoloExterno" placeholder="Digite o protocolo do Atendimento Externo">
+            <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
+        </div>
+
+        <!-- Mensagem de sucesso -->
+        <div id="successMessage" class="success-message"></div>
+    </div>
+
+    <div id="atendimentos" class="tab-content">
+        <h2>Lista de Atendimentos</h2>
+
+        <!-- Botão para exibir/ocultar atendimentos do dia anterior -->
+        <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
+
+        <!-- Tabela de atendimentos -->
+        <table id="atendimentosTable">
+            <thead>
+                <tr>
+                    <th>Tipo de Atendimento</th>
+                    <th>Protocolo</th>
+                    <th>Data e Hora</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas de atendimento serão adicionadas aqui -->
+            </tbody>
+        </table>
+        
+        <!-- Botão para gerar relatório em PDF -->
+        <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
+    </div>
+
+    <div id="dashboard" class="tab-content">
+        <h2>Dashboard</h2>
+
+        <div class="chart-container">
+            <svg id="myChart" width="600" height="400"></svg>
+        </div>
+
+        <!-- Contadores de atendimentos -->
+        <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
+        <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
+        <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
+    </div>
+
+    <!-- Fivecoin -->
+    <div class="fivecoin">
+        <img src="https://www.peeringdb.com/m/2.48.0/logos_user_supplied/org-9490-6e8a7518.png" alt="Fivecoin">
+    </div>
+</div>
+
+<!-- Inclusão do script jsPDF e jsPDF autotable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="scripts.js"></script>
+</body>
+</html>

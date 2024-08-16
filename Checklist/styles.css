@@ -1,0 +1,174 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+header {
+    background-color: #007BFF;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #0056b3;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checklist-item input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.5);
+}
+
+.checklist-item label {
+    font-size: 16px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.success-message {
+    color: green;
+    font-size: 16px;
+    margin-top: 20px;
+    display: none;
+    cursor: pointer;
+}
+
+.success-message.active {
+    display: block;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+}
+
+.remove-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background-color: #c82333;
+}
+
+/* Estilo do gráfico */
+.chart-container {
+    margin-top: 30px;
+}
+
+.bar {
+    fill: #007BFF;
+    cursor: pointer;
+}
+
+.axis {
+    font-size: 12px;
+    fill: #000;
+}
+
+.axis line, .axis path {
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    text-anchor: middle;
+}
+
+/* Contador de atendimentos mensais */
+.contador-mensal {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.contador-item {
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.fivecoin {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.fivecoin img {
+    width: 150px;
+}
