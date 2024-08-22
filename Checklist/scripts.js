@@ -158,15 +158,17 @@ function carregarAtendimentos() {
     });
 }
 
-// Função para atualizar o gráfico
-function atualizarGrafico() {
+// Função para atualizar o gráfico com a opção de ocultar dias anteriores
+function atualizarGrafico(ocultarDiasAnteriores = false) {
     var atendimentos = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
     var datas = {};
-    
+
     for (var i = 0; i < atendimentos.length; i++) {
         var dataHora = atendimentos[i].cells[2].innerText.split(' ')[0];
+        if (ocultarDiasAnteriores && !ehHoje(dataHora)) {
+            continue;  // Pula os dias anteriores se a opção estiver ativa
+        }
 
-        // Formatar a data para dia/mês
         var dataFormatada = formatarData(dataHora);
 
         if (!datas[dataFormatada]) {
@@ -175,20 +177,19 @@ function atualizarGrafico() {
         datas[dataFormatada]++;
     }
 
-    // Atualizar o gráfico SVG
+    // Restante do código para desenhar o gráfico
     var svg = document.getElementById('myChart');
-    svg.innerHTML = '';  // Limpar gráfico anterior
+    svg.innerHTML = '';
 
     var larguraBarra = 40;
     var espacoEntreBarras = 20;
     var alturaMaxima = 300;
     var x = 0;
-    
+
     Object.keys(datas).forEach(function(data) {
         var altura = datas[data] * (alturaMaxima / Math.max(...Object.values(datas)));
         var y = alturaMaxima - altura;
 
-        // Criar a barra
         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
@@ -197,15 +198,12 @@ function atualizarGrafico() {
         rect.setAttribute('class', 'bar');
         svg.appendChild(rect);
 
-        // Criar o texto para quantidade de atendimentos (somente número)
         var quantidadeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         quantidadeText.setAttribute('x', x + larguraBarra / 2);
-
-        // Ajuste para evitar que o texto saia da área visível
         var textY = y - 5;
         if (textY < 15) {
-            textY = y + 15;  // Se o texto for muito próximo ao topo, coloca dentro da barra
-            quantidadeText.setAttribute('fill', 'white'); // Mudar cor para branco caso o texto fique dentro da barra
+            textY = y + 15;
+            quantidadeText.setAttribute('fill', 'white');
         }
         quantidadeText.setAttribute('y', textY);
         quantidadeText.setAttribute('class', 'axis');
@@ -213,7 +211,6 @@ function atualizarGrafico() {
         quantidadeText.textContent = datas[data];
         svg.appendChild(quantidadeText);
 
-        // Criar o texto para a data
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', x + larguraBarra / 2);
         text.setAttribute('y', alturaMaxima + 20);
@@ -225,7 +222,6 @@ function atualizarGrafico() {
         x += larguraBarra + espacoEntreBarras;
     });
 
-    // Criar os eixos
     var eixoX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     eixoX.setAttribute('x1', 0);
     eixoX.setAttribute('y1', alturaMaxima);
@@ -331,4 +327,13 @@ function gerarRelatorioPDF() {
 
     // Baixar o PDF
     doc.save('Relatorio_Atendimentos_Mensais.pdf');
+}
+
+// Função para alternar a exibição dos dias anteriores no gráfico
+function toggleDiasAnteriores() {
+    var botao = document.getElementById('toggleDiasAnteriores');
+    var ocultar = botao.innerText.includes('Ocultar');
+
+    atualizarGrafico(ocultar);
+    botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
 }
