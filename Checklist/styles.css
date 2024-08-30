@@ -172,3 +172,21 @@ th {
 .fivecoin img {
     width: 150px;
 }
+
+/* Estilo para o botão de limpar atendimentos */
+#limparAtendimentos {
+    background-color: #dc3545; /* Cor de fundo vermelha */
+    color: white; /* Cor do texto branca */
+    border: none; /* Remove a borda padrão */
+    border-radius: 5px; /* Cantos arredondados */
+    padding: 10px 20px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho da fonte */
+    cursor: pointer; /* Cursor em forma de mão ao passar sobre o botão */
+    transition: background-color 0.3s ease; /* Transição suave para a mudança de cor */
+    margin-top: 20px; /* Espaçamento superior */
+}
+
+/* Estilo para o botão ao passar o mouse sobre ele */
+#limparAtendimentos:hover {
+    background-color: #c82333; /* Cor de fundo vermelha escura ao passar o mouse */
+}
