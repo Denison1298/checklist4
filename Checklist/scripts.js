@@ -1,8 +1,3 @@
-// Função para limpar a lista de atendimentos
-function limparAtendimentos() {
-    var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
-    tabela.innerHTML = '';  // Limpa o conteúdo da tabela
-
 // Função para exibir o conteúdo da aba selecionada e manter a aba ativa após atualização da página
 function showTabContent(tabId) {
     var tabs = document.getElementsByClassName('tab-content');
