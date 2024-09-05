@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist e Atendimentos</title>
-    <link rel="icon" href="https://www.peeringdb.com/m/2.48.0/logos_user_supplied/org-9490-6e8a7518.png" type="image/png">
+    <link rel="icon" href="C:\Users\denison.santos\Desktop\Checklist\img\icon.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header>
+    <div class="logo-container">
+        <img src="C:\Users\denison.santos\Desktop\Checklist\img\Logo.png" alt="Fivecoin Logo" class="logo">
+    </div>
     <h1>Checklist e Atendimentos</h1>
 </header>
 
@@ -22,6 +25,7 @@
     <div id="checklist" class="tab-content active">
         <h2>Checklist de Atendimentos</h2>
 
+        <!-- Atendimento Interno -->
         <h3>Atendimento Interno</h3>
         <div class="checklist-item">
             <input type="checkbox" id="confirmarClienteInterno">
@@ -62,6 +66,7 @@
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
 
+        <!-- Atendimento Externo -->
         <h3>Atendimento Externo</h3>
         <div class="checklist-item">
             <input type="checkbox" id="confirmarClienteExterno">
@@ -125,7 +130,7 @@
         <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
 
         <!-- Botão para limpar lista de atendimentos -->
-<button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
+        <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
         
         <!-- Tabela de atendimentos -->
         <table id="atendimentosTable">
@@ -162,16 +167,9 @@
         <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
     </div>
 
-    <!-- Fivecoin -->
-    <div class="fivecoin">
-        <img src="https://www.peeringdb.com/m/2.48.0/logos_user_supplied/org-9490-6e8a7518.png" alt="Fivecoin">
-    </div>
-</div>
-
 <!-- Texto de crédito -->
-    <div style="text-align: center; margin-top: 10px;">
-        <p>Desenvolvido por Denison Santos</p>
-    </div>
+<div style="text-align: center; margin-top: 10px;">
+    <p>Desenvolvido por Denison Santos</p>
 </div>
 
 <!-- Inclusão do script jsPDF e jsPDF autotable -->
