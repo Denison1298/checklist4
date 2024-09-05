@@ -2,14 +2,35 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
 }
 
 header {
-    background-color: #007BFF;
-    color: white;
+    display: flex;
+    flex-direction: column; /* Permite que a logo e o título sejam alinhados verticalmente */
+    align-items: center;
+    background-color:#007bff;
+    color: floralwhite;
     padding: 15px;
+    position: relative;
+    height: 120px; /* Aumente a altura para acomodar a logo e o título */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    margin-bottom: 15px; /* Ajuste o espaço entre a logo e o título se necessário */
+}
+
+.logo {
+    width: 250px; /* Aumente a largura da logo */
+    height: auto; /* Mantém a proporção da imagem */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
     text-align: center;
+    color: white;
 }
 
 .container {
@@ -37,6 +58,7 @@ header {
 
 .tab-content {
     display: none;
+    padding: 20px;
 }
 
 .tab-content.active {
@@ -89,13 +111,14 @@ header {
     margin-top: 20px;
     display: none;
     cursor: pointer;
+    border: 1px solid green;
+    padding: 10px;
 }
 
 .success-message.active {
     display: block;
 }
 
-/* Estilo da tabela */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -128,9 +151,9 @@ th {
     background-color: #c82333;
 }
 
-/* Estilo do gráfico */
 .chart-container {
     margin-top: 30px;
+    will-change: transform;
 }
 
 .bar {
@@ -151,7 +174,6 @@ th {
     text-anchor: middle;
 }
 
-/* Contador de atendimentos mensais */
 .contador-mensal {
     margin-top: 20px;
     font-size: 18px;
@@ -173,20 +195,29 @@ th {
     width: 150px;
 }
 
-/* Estilo para o botão de limpar atendimentos */
 #limparAtendimentos {
-    background-color: #dc3545; /* Cor de fundo vermelha */
-    color: white; /* Cor do texto branca */
-    border: none; /* Remove a borda padrão */
-    border-radius: 5px; /* Cantos arredondados */
-    padding: 10px 20px; /* Espaçamento interno */
-    font-size: 16px; /* Tamanho da fonte */
-    cursor: pointer; /* Cursor em forma de mão ao passar sobre o botão */
-    transition: background-color 0.3s ease; /* Transição suave para a mudança de cor */
-    margin-top: 20px; /* Espaçamento superior */
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
 
-/* Estilo para o botão ao passar o mouse sobre ele */
 #limparAtendimentos:hover {
-    background-color: #c82333; /* Cor de fundo vermelha escura ao passar o mouse */
+    background-color: #c82333;
+}
+
+/* Media Queries para dispositivos móveis */
+@media (max-width: 768px) {
+    .logo {
+        width: 80px; /* Ajuste para tamanhos menores, se necessário */
+    }
+
+    .tab {
+        font-size: 14px;
+    }
 }
