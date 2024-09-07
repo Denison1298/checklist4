@@ -272,9 +272,41 @@ function atualizarContadores() {
 
     var totalGeral = totalInterno + totalExterno;
 
+    // Atualiza os contadores no HTML
     document.getElementById('contadorInterno').innerText = 'Total Interno: ' + totalInterno;
     document.getElementById('contadorExterno').innerText = 'Total Externo: ' + totalExterno;
     document.getElementById('contadorGeral').innerText = 'Total Geral: ' + totalGeral;
+
+    // Calcular e exibir a média de atendimentos diários
+    calcularMediaAtendimentos();
+}
+
+// Função para calcular a média de atendimentos diários
+function calcularMediaAtendimentos() {
+    // Obtenha os valores dos contadores de atendimentos
+    const totalInterno = parseInt(document.getElementById('contadorInterno').textContent.split(': ')[1]);
+    const totalExterno = parseInt(document.getElementById('contadorExterno').textContent.split(': ')[1]);
+
+    // Número total de atendimentos
+    const totalAtendimentos = totalInterno + totalExterno;
+
+    // Obter todas as datas dos atendimentos
+    var atendimentos = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    var diasAtendimento = new Set(); // Usar Set para armazenar dias únicos
+
+    for (var i = 0; i < atendimentos.length; i++) {
+        var dataAtendimento = atendimentos[i].cells[2].innerText.split(' ')[0]; // Pega a data do atendimento
+        diasAtendimento.add(dataAtendimento); // Adiciona a data ao conjunto (apenas dias únicos são armazenados)
+    }
+
+    // Calcular o número de dias únicos
+    const diasUnicos = diasAtendimento.size;
+
+    // Se não houve dias de atendimento, a média deve ser zero
+    const mediaAtendimentos = diasUnicos > 0 ? (totalAtendimentos / diasUnicos) : 0;
+
+    // Exibir a média no dashboard
+    document.getElementById('contadorMedia').textContent = `Média de Atendimentos Diários: ${mediaAtendimentos.toFixed(2)}`;
 }
 
 // Função para formatar a data para o formato dia/mês
