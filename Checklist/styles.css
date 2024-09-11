@@ -226,3 +226,9 @@ th {
     color: red; /* Muda a cor para vermelho */
     font-weight: bold; /* Negrito opcional */
 }
+
+.chart-container {
+    width: 100%; /* ou defina uma largura fixa */
+    overflow-x: auto; /* Permite rolagem horizontal apenas nessa área */
+    overflow-y: hidden; /* Impede rolagem vertical */
+}
