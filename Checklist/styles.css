@@ -1,15 +1,26 @@
+/* Definição de variáveis globais */
+:root {
+    --primary-color: #007BFF;
+    --danger-color: #dc3545;
+    --hover-danger: #c82333;
+    --success-color: green;
+    --font-size-base: 16px;
+}
+
+/* Estilos globais */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    font-size: var(--font-size-base); /* Uso de variável para tamanho de fonte */
 }
 
 header {
     display: flex;
     flex-direction: column; /* Permite que a logo e o título sejam alinhados verticalmente */
     align-items: center;
-    background-color:#007bff;
+    background-color: var(--primary-color);
     color: floralwhite;
     padding: 15px;
     position: relative;
@@ -28,13 +39,16 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 24px;
+    font-size: 1.5rem; /* Tamanho relativo à base */
     text-align: center;
     color: white;
 }
 
 .container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .tabs {
@@ -45,11 +59,11 @@ header h1 {
 .tab {
     flex: 1;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: var(--primary-color);
     color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Adicionada transição suave */
 }
 
 .tab:hover {
@@ -73,17 +87,17 @@ header h1 {
 
 .checklist-item input[type="checkbox"] {
     margin-right: 10px;
-    transform: scale(1.5);
+    transform: scale(1.5); /* Checkbox maior */
 }
 
 .checklist-item label {
-    font-size: 16px;
+    font-size: 1rem; /* Ajustado para unidades relativas */
 }
 
 .btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: var(--primary-color);
     color: white;
     text-align: center;
     cursor: pointer;
@@ -98,31 +112,42 @@ header h1 {
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: var(--hover-danger);
 }
 
 .success-message {
-    color: green;
-    font-size: 16px;
+    color: var(--success-color);
+    font-size: 1rem;
     margin-top: 20px;
     display: none;
     cursor: pointer;
-    border: 1px solid green;
+    border: 1px solid var(--success-color);
     padding: 10px;
+    transition: opacity 0.5s ease; /* Suavização da transição */
 }
 
 .success-message.active {
     display: block;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    max-width: 100%; /* Evitar que a tabela se estenda demais */
+    overflow-x: auto; /* Responsividade para tabelas */
 }
 
 table, th, td {
@@ -130,17 +155,17 @@ table, th, td {
 }
 
 th, td {
-    padding: 10px;
+    padding: 1rem; /* Tamanho relativo */
     text-align: left;
 }
 
 th {
-    background-color: #007BFF;
+    background-color: var(--primary-color);
     color: white;
 }
 
 .remove-btn {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
     color: white;
     padding: 5px 10px;
     border: none;
@@ -148,21 +173,24 @@ th {
 }
 
 .remove-btn:hover {
-    background-color: #c82333;
+    background-color: var(--hover-danger);
 }
 
 .chart-container {
     margin-top: 30px;
     will-change: transform;
+    width: 100%; /* ou defina uma largura fixa */
+    overflow-x: auto; /* Permite rolagem horizontal apenas nessa área */
+    overflow-y: hidden; /* Impede rolagem vertical */
 }
 
 .bar {
-    fill: #007BFF;
+    fill: var(--primary-color);
     cursor: pointer;
 }
 
 .axis {
-    font-size: 12px;
+    font-size: 0.75rem;
     fill: #000;
 }
 
@@ -176,13 +204,13 @@ th {
 
 .contador-mensal {
     margin-top: 20px;
-    font-size: 18px;
+    font-size: 1.125rem; /* Tamanho relativo */
     font-weight: bold;
 }
 
 .contador-item {
     margin-top: 5px;
-    font-size: 16px;
+    font-size: 1rem; /* Tamanho relativo */
 }
 
 .fivecoin {
@@ -196,39 +224,45 @@ th {
 }
 
 #limparAtendimentos {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
     color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 20px;
 }
 
 #limparAtendimentos:hover {
-    background-color: #c82333;
+    background-color: var(--hover-danger);
+}
+
+/* Estilo para campos obrigatórios */
+.obrigatorio {
+    color: red;
+    font-weight: bold; /* Negrito opcional */
 }
 
 /* Media Queries para dispositivos móveis */
 @media (max-width: 768px) {
     .logo {
-        width: 80px; /* Ajuste para tamanhos menores, se necessário */
+        width: 80px; /* Ajuste para tamanhos menores */
     }
 
     .tab {
-        font-size: 14px;
+        font-size: 0.875rem;
     }
 }
 
-.obrigatorio {
-    color: red; /* Muda a cor para vermelho */
-    font-weight: bold; /* Negrito opcional */
-}
+@media (max-width: 576px) {
+    header {
+        height: auto;
+        padding: 10px;
+    }
 
-.chart-container {
-    width: 100%; /* ou defina uma largura fixa */
-    overflow-x: auto; /* Permite rolagem horizontal apenas nessa área */
-    overflow-y: hidden; /* Impede rolagem vertical */
+    .container {
+        padding: 10px;
+    }
 }
