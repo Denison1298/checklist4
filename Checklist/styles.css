@@ -221,3 +221,8 @@ th {
         font-size: 14px;
     }
 }
+
+.obrigatorio {
+    color: red; /* Muda a cor para vermelho */
+    font-weight: bold; /* Negrito opcional */
+}
