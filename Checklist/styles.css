@@ -1,13 +1,21 @@
-/* Definição de variáveis globais */
+/* ------------------------
+   Definição de Variáveis Globais
+   ------------------------ */
 :root {
     --primary-color: #007BFF;
     --danger-color: #dc3545;
     --hover-danger: #c82333;
     --success-color: green;
     --font-size-base: 16px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+    --padding-base: 1rem;
+    --border-radius-base: 5px;
 }
 
-/* Estilos globais */
+/* ------------------------
+   Estilos Globais
+   ------------------------ */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -25,7 +33,7 @@ header {
     padding: 15px;
     position: relative;
     height: 120px; /* Aumente a altura para acomodar a logo e o título */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow); /* Variável usada para box-shadow */
 }
 
 .logo-container {
@@ -63,11 +71,15 @@ header h1 {
     color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Adicionada transição suave */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease; /* Transição com variável */
 }
 
 .tab:hover {
     background-color: #0056b3;
+}
+
+.tab:focus {
+    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
 }
 
 .tab-content {
@@ -96,19 +108,23 @@ header h1 {
 
 .btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: var(--padding-base); /* Usando variável para padding */
     background-color: var(--primary-color);
     color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color var(--transition-speed) ease;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--border-radius-base); /* Usando variável para border-radius */
     margin-top: 20px;
 }
 
 .btn:hover {
     background-color: #0056b3;
+}
+
+.btn:focus {
+    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
 }
 
 .btn-danger {
@@ -154,8 +170,12 @@ table, th, td {
     border: 1px solid #ddd;
 }
 
+td {
+    word-break: break-word; /* Força a quebra de palavras longas */
+}
+
 th, td {
-    padding: 1rem; /* Tamanho relativo */
+    padding: var(--padding-base); /* Tamanho relativo para padding */
     text-align: left;
 }
 
@@ -170,10 +190,15 @@ th {
     padding: 5px 10px;
     border: none;
     cursor: pointer;
+    transition: background-color var(--transition-speed) ease;
 }
 
 .remove-btn:hover {
     background-color: var(--hover-danger);
+}
+
+.remove-btn:focus {
+    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
 }
 
 .chart-container {
@@ -227,16 +252,20 @@ th {
     background-color: var(--danger-color);
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
+    border-radius: var(--border-radius-base); /* Usando variável */
+    padding: var(--padding-base); /* Usando variável */
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color var(--transition-speed) ease;
     margin-top: 20px;
 }
 
 #limparAtendimentos:hover {
     background-color: var(--hover-danger);
+}
+
+#limparAtendimentos:focus {
+    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
 }
 
 /* Estilo para campos obrigatórios */
@@ -260,6 +289,14 @@ th {
     header {
         height: auto;
         padding: 10px;
+    }
+
+    header h1 {
+        font-size: 1.25rem; /* Ajuste do tamanho do título */
+    }
+
+    .btn {
+        font-size: 0.875rem; /* Botões menores */
     }
 
     .container {
