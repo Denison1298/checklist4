@@ -3,6 +3,7 @@
    ------------------------ */
 :root {
     --primary-color: #007BFF;
+    --primary-color-hover: #0056b3;
     --danger-color: #dc3545;
     --hover-danger: #c82333;
     --success-color: green;
@@ -21,33 +22,33 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
-    font-size: var(--font-size-base); /* Uso de variável para tamanho de fonte */
+    font-size: var(--font-size-base);
 }
 
 header {
     display: flex;
-    flex-direction: column; /* Permite que a logo e o título sejam alinhados verticalmente */
+    flex-direction: column;
     align-items: center;
     background-color: var(--primary-color);
     color: floralwhite;
     padding: 15px;
     position: relative;
-    height: 120px; /* Aumente a altura para acomodar a logo e o título */
-    box-shadow: var(--box-shadow); /* Variável usada para box-shadow */
+    height: 120px;
+    box-shadow: var(--box-shadow);
 }
 
 .logo-container {
-    margin-bottom: 15px; /* Ajuste o espaço entre a logo e o título se necessário */
+    margin-bottom: 15px;
 }
 
 .logo {
-    width: 250px; /* Aumente a largura da logo */
-    height: auto; /* Mantém a proporção da imagem */
+    width: 250px;
+    height: auto;
 }
 
 header h1 {
     margin: 0;
-    font-size: 1.5rem; /* Tamanho relativo à base */
+    font-size: 1.5rem;
     text-align: center;
     color: white;
 }
@@ -71,15 +72,15 @@ header h1 {
     color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease; /* Transição com variável */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 .tab:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-color-hover);
 }
 
-.tab:focus {
-    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
+.tab:focus, .tab:focus-visible {
+    outline: 3px solid rgba(0, 123, 255, 0.6);
 }
 
 .tab-content {
@@ -99,32 +100,32 @@ header h1 {
 
 .checklist-item input[type="checkbox"] {
     margin-right: 10px;
-    transform: scale(1.5); /* Checkbox maior */
+    transform: scale(1.5);
 }
 
 .checklist-item label {
-    font-size: 1rem; /* Ajustado para unidades relativas */
+    font-size: 1rem;
 }
 
 .btn {
     display: inline-block;
-    padding: var(--padding-base); /* Usando variável para padding */
+    padding: var(--padding-base);
     background-color: var(--primary-color);
     color: white;
     text-align: center;
     cursor: pointer;
     transition: background-color var(--transition-speed) ease;
     border: none;
-    border-radius: var(--border-radius-base); /* Usando variável para border-radius */
+    border-radius: var(--border-radius-base);
     margin-top: 20px;
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-color-hover);
 }
 
-.btn:focus {
-    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
+.btn:focus, .btn:focus-visible {
+    outline: 3px solid rgba(0, 123, 255, 0.6);
 }
 
 .btn-danger {
@@ -143,7 +144,7 @@ header h1 {
     cursor: pointer;
     border: 1px solid var(--success-color);
     padding: 10px;
-    transition: opacity 0.5s ease; /* Suavização da transição */
+    transition: opacity 0.5s ease;
 }
 
 .success-message.active {
@@ -162,8 +163,8 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    max-width: 100%; /* Evitar que a tabela se estenda demais */
-    overflow-x: auto; /* Responsividade para tabelas */
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 table, th, td {
@@ -171,11 +172,11 @@ table, th, td {
 }
 
 td {
-    word-break: break-word; /* Força a quebra de palavras longas */
+    word-break: break-word;
 }
 
 th, td {
-    padding: var(--padding-base); /* Tamanho relativo para padding */
+    padding: var(--padding-base);
     text-align: left;
 }
 
@@ -197,16 +198,15 @@ th {
     background-color: var(--hover-danger);
 }
 
-.remove-btn:focus {
-    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
+.remove-btn:focus, .remove-btn:focus-visible {
+    outline: 3px solid rgba(0, 123, 255, 0.6);
 }
 
 .chart-container {
     margin-top: 30px;
-    will-change: transform;
-    width: 100%; /* ou defina uma largura fixa */
-    overflow-x: auto; /* Permite rolagem horizontal apenas nessa área */
-    overflow-y: hidden; /* Impede rolagem vertical */
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .bar {
@@ -229,13 +229,13 @@ th {
 
 .contador-mensal {
     margin-top: 20px;
-    font-size: 1.125rem; /* Tamanho relativo */
+    font-size: 1.125rem;
     font-weight: bold;
 }
 
 .contador-item {
     margin-top: 5px;
-    font-size: 1rem; /* Tamanho relativo */
+    font-size: 1rem;
 }
 
 .fivecoin {
@@ -252,8 +252,8 @@ th {
     background-color: var(--danger-color);
     color: white;
     border: none;
-    border-radius: var(--border-radius-base); /* Usando variável */
-    padding: var(--padding-base); /* Usando variável */
+    border-radius: var(--border-radius-base);
+    padding: var(--padding-base);
     font-size: 1rem;
     cursor: pointer;
     transition: background-color var(--transition-speed) ease;
@@ -264,20 +264,20 @@ th {
     background-color: var(--hover-danger);
 }
 
-#limparAtendimentos:focus {
-    outline: 3px solid rgba(0, 123, 255, 0.6); /* Destaque de acessibilidade */
+#limparAtendimentos:focus, #limparAtendimentos:focus-visible {
+    outline: 3px solid rgba(0, 123, 255, 0.6);
 }
 
 /* Estilo para campos obrigatórios */
 .obrigatorio {
     color: red;
-    font-weight: bold; /* Negrito opcional */
+    font-weight: bold;
 }
 
 /* Media Queries para dispositivos móveis */
 @media (max-width: 768px) {
     .logo {
-        width: 80px; /* Ajuste para tamanhos menores */
+        width: 80px;
     }
 
     .tab {
@@ -292,11 +292,11 @@ th {
     }
 
     header h1 {
-        font-size: 1.25rem; /* Ajuste do tamanho do título */
+        font-size: 1.25rem;
     }
 
     .btn {
-        font-size: 0.875rem; /* Botões menores */
+        font-size: 0.875rem;
     }
 
     .container {
