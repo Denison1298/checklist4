@@ -12,6 +12,17 @@
     --transition-speed: 0.3s;
     --padding-base: 1rem;
     --border-radius-base: 5px;
+    --margin-small: 10px;
+    --margin-medium: 20px;
+}
+
+/* ------------------------
+   Reset CSS
+   ------------------------ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* ------------------------
@@ -19,8 +30,6 @@
    ------------------------ */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #ffffff;
     font-size: var(--font-size-base);
 }
@@ -31,14 +40,13 @@ header {
     align-items: center;
     background-color: var(--primary-color);
     color: floralwhite;
-    padding: 15px;
-    position: relative;
+    padding: var(--margin-medium);
     height: 120px;
     box-shadow: var(--box-shadow);
 }
 
 .logo-container {
-    margin-bottom: 15px;
+    margin-bottom: var(--margin-medium);
 }
 
 .logo {
@@ -54,25 +62,25 @@ header h1 {
 }
 
 .container {
-    padding: 20px;
+    padding: var(--margin-medium);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--margin-medium);
 }
 
 .tabs {
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: var(--margin-medium);
 }
 
 .tab {
     flex: 1;
-    padding: 10px;
+    padding: var(--margin-small);
     background-color: var(--primary-color);
     color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 .tab:hover {
@@ -85,7 +93,7 @@ header h1 {
 
 .tab-content {
     display: none;
-    padding: 20px;
+    padding: var(--margin-medium);
 }
 
 .tab-content.active {
@@ -95,11 +103,11 @@ header h1 {
 .checklist-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: var(--margin-small);
 }
 
 .checklist-item input[type="checkbox"] {
-    margin-right: 10px;
+    margin-right: var(--margin-small);
     transform: scale(1.5);
 }
 
@@ -107,25 +115,25 @@ header h1 {
     font-size: 1rem;
 }
 
+/* Base para botões */
 .btn {
     display: inline-block;
     padding: var(--padding-base);
-    background-color: var(--primary-color);
-    color: white;
     text-align: center;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed);
     border: none;
     border-radius: var(--border-radius-base);
-    margin-top: 20px;
+    font-size: 1rem;
+    color: white;
 }
 
-.btn:hover {
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
     background-color: var(--primary-color-hover);
-}
-
-.btn:focus, .btn:focus-visible {
-    outline: 3px solid rgba(0, 123, 255, 0.6);
 }
 
 .btn-danger {
@@ -136,43 +144,47 @@ header h1 {
     background-color: var(--hover-danger);
 }
 
+.btn:focus, .btn:focus-visible {
+    outline: 3px solid rgba(0, 123, 255, 0.6);
+}
+
 .success-message {
     color: var(--success-color);
     font-size: 1rem;
-    margin-top: 20px;
-    display: none;
+    margin-top: var(--margin-medium);
     cursor: pointer;
     border: 1px solid var(--success-color);
-    padding: 10px;
-    transition: opacity 0.5s ease;
+    padding: var(--padding-base);
+    display: none;
+    opacity: 0;
+    animation: fadeIn var(--transition-speed) forwards;
 }
 
 .success-message.active {
     display: block;
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
 }
 
 @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
     to {
         opacity: 1;
     }
 }
 
+/* Estilos para tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    max-width: 100%;
+    margin-top: var(--margin-medium);
+    table-layout: auto;
+    word-wrap: break-word;
     overflow-x: auto;
 }
 
 table, th, td {
     border: 1px solid #ddd;
-}
-
-td {
-    word-break: break-word;
 }
 
 th, td {
@@ -191,90 +203,14 @@ th {
     padding: 5px 10px;
     border: none;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed);
 }
 
 .remove-btn:hover {
     background-color: var(--hover-danger);
 }
 
-.remove-btn:focus, .remove-btn:focus-visible {
-    outline: 3px solid rgba(0, 123, 255, 0.6);
-}
-
-.chart-container {
-    margin-top: 30px;
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.bar {
-    fill: var(--primary-color);
-    cursor: pointer;
-}
-
-.axis {
-    font-size: 0.75rem;
-    fill: #000;
-}
-
-.axis line, .axis path {
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    text-anchor: middle;
-}
-
-.contador-mensal {
-    margin-top: 20px;
-    font-size: 1.125rem;
-    font-weight: bold;
-}
-
-.contador-item {
-    margin-top: 5px;
-    font-size: 1rem;
-}
-
-.fivecoin {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.fivecoin img {
-    width: 150px;
-}
-
-#limparAtendimentos {
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-base);
-    padding: var(--padding-base);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color var(--transition-speed) ease;
-    margin-top: 20px;
-}
-
-#limparAtendimentos:hover {
-    background-color: var(--hover-danger);
-}
-
-#limparAtendimentos:focus, #limparAtendimentos:focus-visible {
-    outline: 3px solid rgba(0, 123, 255, 0.6);
-}
-
-/* Estilo para campos obrigatórios */
-.obrigatorio {
-    color: red;
-    font-weight: bold;
-}
-
-/* Media Queries para dispositivos móveis */
+/* Responsividade */
 @media (max-width: 768px) {
     .logo {
         width: 80px;
@@ -288,7 +224,7 @@ th {
 @media (max-width: 576px) {
     header {
         height: auto;
-        padding: 10px;
+        padding: var(--margin-small);
     }
 
     header h1 {
@@ -300,6 +236,6 @@ th {
     }
 
     .container {
-        padding: 10px;
+        padding: var(--margin-small);
     }
 }
