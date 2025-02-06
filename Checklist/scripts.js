@@ -186,7 +186,7 @@ function salvarAtendimentos() {
 
 // Função para adicionar patrimônio retirado
 function adicionarPatrimonio() {
-    var patrimonioInput = document.getElementById('patrimonioonu');
+    var patrimonioInput = document.getElementById('patrimonioonu'); // Ajuste conforme a origem do patrimônio
     var patrimonio = patrimonioInput.value.trim();
 
     if (patrimonio === "") {
@@ -249,7 +249,7 @@ function atualizarGrafico() {
         datas[dataHora]++;
     }
 
-    // Limpa o gráfico atual
+    // Restante do código para desenhar o gráfico
     var svg = document.getElementById('myChart');
     svg.innerHTML = '';
 
@@ -415,4 +415,5 @@ function gerarRelatorioPDF() {
     });
 
     // Baixar o PDF
-    doc.save
+    doc.save('Relatorio_Atendimentos_Mensais.pdf');
+}
