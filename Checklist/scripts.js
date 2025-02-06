@@ -385,3 +385,78 @@ function toggleDiasAnteriores() {
     atualizarGrafico(ocultar);
     botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
 }
+
+// Adicionar confirmação antes de limpar atendimentos e patrimônios
+function limparAtendimentos() {
+    if (confirm('Tem certeza que deseja limpar todos os atendimentos? Esta ação não pode ser desfeita.')) {
+        var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
+        tabela.innerHTML = '';  // Limpa o conteúdo da tabela
+        localStorage.removeItem('atendimentos'); // Limpar atendimentos do localStorage
+        atualizarGrafico();
+        atualizarContadores();
+        mostrarMensagemSucesso('Todos os atendimentos foram limpos com sucesso!');
+    }
+}
+
+function limparPatrimonios() {
+    if (confirm('Tem certeza que deseja limpar todos os patrimônios retirados? Esta ação não pode ser desfeita.')) {
+        var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
+        tabela.innerHTML = '';
+        localStorage.removeItem('patrimonios');
+        atualizarContadorPatrimonios();
+        mostrarMensagemSucesso('Todos os patrimônios retirados foram limpos com sucesso!');
+    }
+}
+
+// Criar aba para patrimônios retirados
+function showTabContent(tabId) {
+    var tabs = document.getElementsByClassName('tab-content');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    document.getElementById(tabId).classList.add('active');
+    localStorage.setItem('activeTab', tabId);
+}
+
+// Atualizar contador de patrimônios
+function atualizarContadorPatrimonios() {
+    var patrimonios = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    document.getElementById('contadorPatrimonios').innerText = 'Total Patrimônios Retirados: ' + patrimonios.length;
+}
+
+// Adicionar patrimônio retirado
+function adicionarPatrimonio(patrimonio) {
+    var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
+    var novaLinha = tabela.insertRow();
+    var celulaNome = novaLinha.insertCell(0);
+    var celulaDataHora = novaLinha.insertCell(1);
+    var celulaAcoes = novaLinha.insertCell(2);
+    
+    var dataHoraAtual = new Date().toLocaleString('pt-BR');
+    celulaNome.innerText = patrimonio;
+    celulaDataHora.innerText = dataHoraAtual;
+    celulaAcoes.innerHTML = '<button class="remove-btn" onclick="removerPatrimonio(this)">Remover</button>';
+    
+    salvarPatrimonios();
+    atualizarContadorPatrimonios();
+}
+
+// Remover patrimônio
+function removerPatrimonio(botao) {
+    var linha = botao.parentNode.parentNode;
+    linha.parentNode.removeChild(linha);
+    salvarPatrimonios();
+    atualizarContadorPatrimonios();
+}
+
+// Salvar patrimônios no localStorage
+function salvarPatrimonios() {
+    var patrimonios = [];
+    var linhas = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    for (var i = 0; i < linhas.length; i++) {
+        var nome = linhas[i].cells[0].innerText;
+        var dataHora = linhas[i].cells[1].innerText;
+        patrimonios.push({ nome, dataHora });
+    }
+    localStorage.setItem('patrimonios', JSON.stringify(patrimonios));
+}
