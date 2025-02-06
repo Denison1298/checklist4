@@ -1,37 +1,17 @@
 // Função para limpar a lista de atendimentos
 function limparAtendimentos() {
-    if (confirm('Tem certeza que deseja limpar todos os atendimentos? Esta ação não pode ser desfeita.')) {
-        var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
-        tabela.innerHTML = '';  // Limpa o conteúdo da tabela
+    var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
+    tabela.innerHTML = '';  // Limpa o conteúdo da tabela
 
-        // Limpar atendimentos do localStorage
-        localStorage.removeItem('atendimentos');
+    // Limpar atendimentos do localStorage
+    localStorage.removeItem('atendimentos');
 
-        // Atualizar o gráfico e contadores após limpar a lista
-        atualizarGrafico();
-        atualizarContadores();
-
-        // Mostrar mensagem de sucesso
-        mostrarMensagemSucesso('Todos os atendimentos foram limpos com sucesso!');
-    }
-}
-
-// Função para limpar a lista de patrimônios
-function limparPatrimonios() {
-    if (confirm('Tem certeza que deseja limpar todos os patrimônios retirados? Esta ação não pode ser desfeita.')) {
-        var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
-        tabela.innerHTML = '';  // Limpa o conteúdo da tabela
-
-        // Limpar patrimônios do localStorage
-        localStorage.removeItem('patrimonios');
-
-        // Atualizar o gráfico de patrimônios e contadores após limpar a lista
-        atualizarGraficoPatrimonios();
-        atualizarContadorPatrimonios();
-
-        // Mostrar mensagem de sucesso
-        mostrarMensagemSucesso('Todos os patrimônios retirados foram limpos com sucesso!');
-    }
+    // Atualizar o gráfico e contadores após limpar a lista
+    atualizarGrafico();
+    atualizarContadores();
+    
+    // Mostrar mensagem de sucesso
+    mostrarMensagemSucesso('Todos os atendimentos foram limpos com sucesso!');
 }
 
 // Função para exibir o conteúdo da aba selecionada e manter a aba ativa após atualização da página
@@ -53,12 +33,10 @@ window.onload = function() {
         showTabContent('checklist');  // Aba padrão
     }
     
-    // Carregar atendimentos e patrimônios, e atualizar gráficos e contadores
+    // Carregar atendimentos e atualizar o gráfico e contadores
     carregarAtendimentos();
-    carregarPatrimonios();
     atualizarGrafico();
     atualizarContadores();
-    atualizarContadorPatrimonios();
 
     // Restaurar o estado do botão de exibição/ocultação dos atendimentos anteriores
     restaurarEstadoBotaoAtendimentos();
@@ -277,83 +255,6 @@ function atualizarGrafico(ocultarDiasAnteriores = false) {
     svg.appendChild(eixoY);
 }
 
-// Função para atualizar o gráfico de patrimônios
-function atualizarGraficoPatrimonios() {
-    var patrimonios = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    var datas = {};
-
-    for (var i = 0; i < patrimonios.length; i++) {
-        var dataHora = patrimonios[i].cells[1].innerText.split(' ')[0];
-        var dataFormatada = formatarData(dataHora);
-
-        if (!datas[dataFormatada]) {
-            datas[dataFormatada] = 0;
-        }
-        datas[dataFormatada]++;
-    }
-
-    // Restante do código para desenhar o gráfico de patrimônios
-    var svg = document.getElementById('patrimoniosChart');
-    svg.innerHTML = '';
-
-    var larguraBarra = 40;
-    var espacoEntreBarras = 20;
-    var alturaMaxima = 300;
-    var x = 0;
-
-    Object.keys(datas).forEach(function(data) {
-        var altura = datas[data] * (alturaMaxima / Math.max(...Object.values(datas)));
-        var y = alturaMaxima - altura;
-
-        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', x);
-        rect.setAttribute('y', y);
-        rect.setAttribute('width', larguraBarra);
-        rect.setAttribute('height', altura);
-        rect.setAttribute('class', 'bar');
-        svg.appendChild(rect);
-
-        var quantidadeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        quantidadeText.setAttribute('x', x + larguraBarra / 2);
-        var textY = y - 5;
-        if (textY < 15) {
-            textY = y + 15;
-            quantidadeText.setAttribute('fill', 'white');
-        }
-        quantidadeText.setAttribute('y', textY);
-        quantidadeText.setAttribute('class', 'axis');
-        quantidadeText.setAttribute('text-anchor', 'middle');
-        quantidadeText.textContent = datas[data];
-        svg.appendChild(quantidadeText);
-
-        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', x + larguraBarra / 2);
-        text.setAttribute('y', alturaMaxima + 20);
-        text.setAttribute('class', 'axis');
-        text.setAttribute('text-anchor', 'middle');
-        text.textContent = data;
-        svg.appendChild(text);
-
-        x += larguraBarra + espacoEntreBarras;
-    });
-
-    var eixoX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    eixoX.setAttribute('x1', 0);
-    eixoX.setAttribute('y1', alturaMaxima);
-    eixoX.setAttribute('x2', x);
-    eixoX.setAttribute('y2', alturaMaxima);
-    eixoX.setAttribute('class', 'axis');
-    svg.appendChild(eixoX);
-
-    var eixoY = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    eixoY.setAttribute('x1', 0);
-    eixoY.setAttribute('y1', 0);
-    eixoY.setAttribute('x2', 0);
-    eixoY.setAttribute('y2', alturaMaxima);
-    eixoY.setAttribute('class', 'axis');
-    svg.appendChild(eixoY);
-}
-
 // Função para atualizar os contadores de atendimentos
 function atualizarContadores() {
     var atendimentos = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -380,172 +281,32 @@ function atualizarContadores() {
     calcularMediaAtendimentos();
 }
 
-// Função para atualizar o contador de patrimônios
-function atualizarContadorPatrimonios() {
-    var patrimonios = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    document.getElementById('contadorPatrimonios').innerText = 'Total Patrimônios Retirados: ' + patrimonios.length;
-}
+// Função para calcular a média de atendimentos diários
+function calcularMediaAtendimentos() {
+    // Obtenha os valores dos contadores de atendimentos
+    const totalInterno = parseInt(document.getElementById('contadorInterno').textContent.split(': ')[1]);
+    const totalExterno = parseInt(document.getElementById('contadorExterno').textContent.split(': ')[1]);
 
-// Função para adicionar patrimônio retirado
-function adicionarPatrimonio() {
-    var patrimonioInput = document.getElementById('patrimonioonu');
-    var patrimonio = patrimonioInput.value.trim();
+    // Número total de atendimentos
+    const totalAtendimentos = totalInterno + totalExterno;
 
-    if (patrimonio === "") {
-        alert('Por favor, insira um patrimônio válido.');
-        return;
+    // Obter todas as datas dos atendimentos
+    var atendimentos = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    var diasAtendimento = new Set(); // Usar Set para armazenar dias únicos
+
+    for (var i = 0; i < atendimentos.length; i++) {
+        var dataAtendimento = atendimentos[i].cells[2].innerText.split(' ')[0]; // Pega a data do atendimento
+        diasAtendimento.add(dataAtendimento); // Adiciona a data ao conjunto (apenas dias únicos são armazenados)
     }
 
-    var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
-    var novaLinha = tabela.insertRow();
-    var celulaNome = novaLinha.insertCell(0);
-    var celulaDataHora = novaLinha.insertCell(1);
-    var celulaAcoes = novaLinha.insertCell(2);
+    // Calcular o número de dias únicos
+    const diasUnicos = diasAtendimento.size;
 
-    var dataHoraAtual = new Date().toLocaleString('pt-BR');
-    celulaNome.innerText = patrimonio;
-    celulaDataHora.innerText = dataHoraAtual;
-    celulaAcoes.innerHTML = '<button class="remove-btn" onclick="removerPatrimonio(this)">Remover</button>';
+    // Se não houve dias de atendimento, a média deve ser zero
+    const mediaAtendimentos = diasUnicos > 0 ? (totalAtendimentos / diasUnicos) : 0;
 
-    salvarPatrimonios();
-    atualizarContadorPatrimonios();
-    patrimonioInput.value = ''; // Limpa o campo de entrada
-
-    atualizarGraficoPatrimonios(); // Atualiza o gráfico de patrimônios após adicionar
-}
-
-// Remover patrimônio
-function removerPatrimonio(botao) {
-    var linha = botao.parentNode.parentNode;
-    linha.parentNode.removeChild(linha);
-    salvarPatrimonios(); // Salva as alterações no localStorage
-    atualizarContadorPatrimonios(); // Atualiza o contador de patrimônios
-    atualizarGraficoPatrimonios(); // Atualiza o gráfico de patrimônios após remover
-}
-
-// Função para carregar patrimônios do localStorage
-function carregarPatrimonios() {
-    var patrimonios = JSON.parse(localStorage.getItem('patrimonios')) || [];
-    var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
-    tabela.innerHTML = '';  // Limpar a tabela
-
-    patrimonios.forEach(function(patrimonio) {
-        var novaLinha = tabela.insertRow();
-        var celulaNome = novaLinha.insertCell(0);
-        var celulaDataHora = novaLinha.insertCell(1);
-        var celulaAcoes = novaLinha.insertCell(2);
-
-        celulaNome.innerText = patrimonio.nome;
-        celulaDataHora.innerText = patrimonio.dataHora;
-        celulaAcoes.innerHTML = '<button class="remove-btn" onclick="removerPatrimonio(this)">Remover</button>';
-    });
-
-    atualizarContadorPatrimonios();
-}
-
-// Função para adicionar patrimônio retirado
-function adicionarPatrimonio() {
-    var patrimonioInput = document.getElementById('patrimonioonu');
-    var patrimonio = patrimonioInput.value.trim();
-
-    if (patrimonio === "") {
-        alert('Por favor, insira um patrimônio válido.');
-        return;
-    }
-
-    var tabela = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0];
-    var novaLinha = tabela.insertRow();
-    var celulaNome = novaLinha.insertCell(0);
-    var celulaDataHora = novaLinha.insertCell(1);
-    var celulaAcoes = novaLinha.insertCell(2);
-
-    var dataHoraAtual = new Date().toLocaleString('pt-BR');
-    celulaNome.innerText = patrimonio;
-    celulaDataHora.innerText = dataHoraAtual;
-    celulaAcoes.innerHTML = '<button class="remove-btn" onclick="removerPatrimonio(this)">Remover</button>';
-
-    salvarPatrimonios();
-    atualizarContadorPatrimonios();
-    patrimonioInput.value = ''; // Limpa o campo de entrada
-
-    atualizarGraficoPatrimonios(); // Atualiza o gráfico de patrimônios após adicionar
-}
-
-// Função para atualizar o gráfico de patrimônios
-function atualizarGraficoPatrimonios() {
-    var patrimonios = document.getElementById('patrimoniosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    var datas = {};
-
-    for (var i = 0; i < patrimonios.length; i++) {
-        var dataHora = patrimonios[i].cells[1].innerText.split(' ')[0];
-        var dataFormatada = formatarData(dataHora);
-
-        if (!datas[dataFormatada]) {
-            datas[dataFormatada] = 0;
-        }
-        datas[dataFormatada]++;
-    }
-
-    // Restante do código para desenhar o gráfico de patrimônios
-    var svg = document.getElementById('patrimoniosChart');
-    svg.innerHTML = '';
-
-    var larguraBarra = 40;
-    var espacoEntreBarras = 20;
-    var alturaMaxima = 300;
-    var x = 0;
-
-    Object.keys(datas).forEach(function(data) {
-        var altura = datas[data] * (alturaMaxima / Math.max(...Object.values(datas)));
-        var y = alturaMaxima - altura;
-
-        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', x);
-        rect.setAttribute('y', y);
-        rect.setAttribute('width', larguraBarra);
-        rect.setAttribute('height', altura);
-        rect.setAttribute('class', 'bar');
-        svg.appendChild(rect);
-
-        var quantidadeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        quantidadeText.setAttribute('x', x + larguraBarra / 2);
-        var textY = y - 5;
-        if (textY < 15) {
-            textY = y + 15;
-            quantidadeText.setAttribute('fill', 'white');
-        }
-        quantidadeText.setAttribute('y', textY);
-        quantidadeText.setAttribute('class', 'axis');
-        quantidadeText.setAttribute('text-anchor', 'middle');
-        quantidadeText.textContent = datas[data];
-        svg.appendChild(quantidadeText);
-
-        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', x + larguraBarra / 2);
-        text.setAttribute('y', alturaMaxima + 20);
-        text.setAttribute('class', 'axis');
-        text.setAttribute('text-anchor', 'middle');
-        text.textContent = data;
-        svg.appendChild(text);
-
-        x += larguraBarra + espacoEntreBarras;
-    });
-
-    var eixoX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    eixoX.setAttribute('x1', 0);
-    eixoX.setAttribute('y1', alturaMaxima);
-    eixoX.setAttribute('x2', x);
-    eixoX.setAttribute('y2', alturaMaxima);
-    eixoX.setAttribute('class', 'axis');
-    svg.appendChild(eixoX);
-
-    var eixoY = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    eixoY.setAttribute('x1', 0);
-    eixoY.setAttribute('y1', 0);
-    eixoY.setAttribute('x2', 0);
-    eixoY.setAttribute('y2', alturaMaxima);
-    eixoY.setAttribute('class', 'axis');
-    svg.appendChild(eixoY);
+    // Exibir a média no dashboard
+    document.getElementById('contadorMedia').textContent = `Média de Atendimentos Diários: ${mediaAtendimentos.toFixed(2)}`;
 }
 
 // Função para formatar a data para o formato dia/mês
@@ -556,7 +317,20 @@ function formatarData(dataHora) {
     return `${dia}/${mes}`;
 }
 
-// Função para gerar o relatório em PDF
+// Função para salvar atendimentos no localStorage
+function salvarAtendimentos() {
+    var atendimentos = [];
+    var linhas = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    for (var i = 0; i < linhas.length; i++) {
+        var tipo = linhas[i].cells[0].innerText;
+        var protocolo = linhas[i].cells[1].innerText;
+        var dataHora = linhas[i].cells[2].innerText;
+        atendimentos.push({ tipo, protocolo, dataHora });
+    }
+    localStorage.setItem('atendimentos', JSON.stringify(atendimentos));
+}
+
+// Função para gerar o relatório em PDF (sem o gráfico)
 function gerarRelatorioPDF() {
     var { jsPDF } = window.jspdf;
     var doc = new jsPDF();
@@ -601,4 +375,13 @@ function gerarRelatorioPDF() {
 
     // Baixar o PDF
     doc.save('Relatorio_Atendimentos_Mensais.pdf');
+}
+
+// Função para alternar a exibição dos dias anteriores no gráfico
+function toggleDiasAnteriores() {
+    var botao = document.getElementById('toggleDiasAnteriores');
+    var ocultar = botao.innerText.includes('Ocultar');
+
+    atualizarGrafico(ocultar);
+    botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
 }
