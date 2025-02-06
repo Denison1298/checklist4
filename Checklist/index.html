@@ -19,6 +19,7 @@
     <div class="tabs">
         <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
+        <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
     </div>
 
@@ -52,14 +53,14 @@
 
         <!-- Campo e botão para enviar patrimonio onu -->
         <div>
-            <input type="text" id="patrimonioonu" placeholder="Digite o patreimonio da onu">
-            <button class="btn" onclick="enviarPatrimonio('interno')">Enviar patrimonio</button>
+            <input type="text" id="patrimonioonu" placeholder="Digite o patrimonio da onu">
+            <button class="btn" onclick="enviarPatrimonio('onu')">Enviar Patrimonio ONU</button>
         </div>
 
         <!-- Campo e botão para enviar patrimonio Roteador -->
         <div>
             <input type="text" id="patrimonioroteador" placeholder="Digite o patrimonio do Roteador">
-            <button class="btn" onclick="enviarPatrimonio('interno')">Enviar patrimonio</button>
+            <button class="btn" onclick="enviarPatrimonio('roteador')">Enviar Patrimonio Roteador</button>
         </div>
 
         <!-- Atendimento Externo -->
@@ -127,6 +128,24 @@
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
+    <div id="patrimonios" class="tab-content">
+        <h2>Lista de Patrimônios Retirados</h2>
+
+        <!-- Tabela de patrimônios -->
+        <table id="patrimoniosTable">
+            <thead>
+                <tr>
+                    <th>Tipo de Patrimônio</th>
+                    <th>Identificação</th>
+                    <th>Data e Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas de patrimônio serão adicionadas aqui -->
+            </tbody>
+        </table>
+    </div>
+
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
 
@@ -140,6 +159,7 @@
         <!-- Contadores de atendimentos -->
         <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
         <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
+        <div id="contadorPatrimonio" class="contador-item">Total Patrimônios: 0</div>
         <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
         <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
     </div>
