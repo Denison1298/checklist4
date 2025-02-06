@@ -1,17 +1,19 @@
 // Função para limpar a lista de atendimentos
 function limparAtendimentos() {
-    var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
-    tabela.innerHTML = '';  // Limpa o conteúdo da tabela
+    if (confirm('Tem certeza que deseja limpar todos os atendimentos? Esta ação não pode ser desfeita.')) {
+        var tabela = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
+        tabela.innerHTML = '';  // Limpa o conteúdo da tabela
 
-    // Limpar atendimentos do localStorage
-    localStorage.removeItem('atendimentos');
+        // Limpar atendimentos do localStorage
+        localStorage.removeItem('atendimentos');
 
-    // Atualizar o gráfico e contadores após limpar a lista
-    atualizarGrafico();
-    atualizarContadores();
-    
-    // Mostrar mensagem de sucesso
-    mostrarMensagemSucesso('Todos os atendimentos foram limpos com sucesso!');
+        // Atualizar o gráfico e contadores após limpar a lista
+        atualizarGrafico();
+        atualizarContadores();
+
+        // Mostrar mensagem de sucesso
+        mostrarMensagemSucesso('Todos os atendimentos foram limpos com sucesso!');
+    }
 }
 
 // Função para exibir o conteúdo da aba selecionada e manter a aba ativa após atualização da página
