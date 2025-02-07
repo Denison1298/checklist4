@@ -387,3 +387,108 @@ function toggleDiasAnteriores() {
     atualizarGrafico(ocultar);
     botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
 }
+
+// Armazenar dados de patrimônios
+let patrimoniosData = {
+    onu: [],
+    roteador: [],
+};
+
+let totalPatrimonios = {
+    onu: 0,
+    roteador: 0,
+    geral: 0,
+};
+
+// Função para enviar patrimônio
+function enviarPatrimonio(tipo) {
+    const input = tipo === 'onu' ? document.getElementById('patrimonioonu') : document.getElementById('patrimonioroteador');
+    const valor = input.value;
+
+    if (valor) {
+        const data = new Date().toLocaleDateString('pt-BR');
+        patrimoniosData[tipo].push({ valor, data });
+
+        // Atualizar totais
+        totalPatrimonios[tipo]++;
+        totalPatrimonios.geral++;
+
+        // Limpar campo de entrada
+        input.value = '';
+
+        // Atualizar o gráfico
+        atualizarGrafico();
+        atualizarContadores();
+    } else {
+        alert("Por favor, digite um valor.");
+    }
+}
+
+// Função para atualizar contadores
+function atualizarContadores() {
+    document.getElementById('contadorPatrimonio').textContent = `Total Patrimônios: ${totalPatrimonios.geral}`;
+    document.getElementById('contadorOnu').textContent = `Total ONU: ${totalPatrimonios.onu}`;
+    document.getElementById('contadorRoteador').textContent = `Total Roteador: ${totalPatrimonios.roteador}`;
+    const media = totalPatrimonios.geral / Math.max(1, Object.keys(patrimoniosData.onu).length + Object.keys(patrimoniosData.roteador).length);
+    document.getElementById('contadorMedia').textContent = `Média de Patrimônios retirados por dia: ${media.toFixed(2)}`;
+}
+
+// Função para atualizar o gráfico
+function atualizarGrafico() {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const labels = Object.keys(patrimoniosData.onu.reduce((acc, curr) => {
+        acc[curr.data] = (acc[curr.data] || 0) + 1;
+        return acc;
+    }, {})).concat(Object.keys(patrimoniosData.roteador.reduce((acc, curr) => {
+        acc[curr.data] = (acc[curr.data] || 0) + 1;
+        return acc;
+    }, {})));
+
+    const dataOnu = labels.map(date => patrimoniosData.onu.filter(item => item.data === date).length);
+    const dataRoteador = labels.map(date => patrimoniosData.roteador.filter(item => item.data === date).length);
+
+    const chartData = {
+        labels: [...new Set(labels)], // remove duplicates
+        datasets: [
+            {
+                label: 'Patrimônios ONU',
+                data: dataOnu,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Patrimônios Roteador',
+                data: dataRoteador,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Função para mostrar conteúdo da aba
+function showTabContent(tabId) {
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    document.getElementById(tabId).classList.add('active');
+}
+
+// Inicializa contadores no carregamento
+document.addEventListener('DOMContentLoaded', atualizarContadores);
