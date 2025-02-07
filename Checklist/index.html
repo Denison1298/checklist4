@@ -204,5 +204,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <script src="scripts.js"></script>
+<script>
+    function enviarPatrimonio(item) {
+        let lista = document.getElementById("listaPatrimonios");
+        let novoItem = document.createElement("li");
+        novoItem.textContent = item;
+        lista.appendChild(novoItem);
+        alert(item + " enviado para Patrimônios Retirados!");
+    }
+
+    function showTabContent(tabId) {
+        let tabContent = document.getElementById(tabId);
+        tabContent.style.display = tabContent.style.display === "none" ? "block" : "none";
+    }
+</script>
 </body>
 </html>
