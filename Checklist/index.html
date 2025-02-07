@@ -55,13 +55,13 @@
         <!-- Campo e botão para enviar patrimonio onu -->
         <div>
             <input type="text" id="patrimonioonu" placeholder="Digite o patrimonio da onu">
-            <button class="btn" onclick="enviarPatrimonio('onu')">Enviar Patrimonio ONU</button>
+            <button class="btn" onclick="enviarPatrimonio('ONU')">Enviar Patrimonio ONU</button>
         </div>
 
         <!-- Campo e botão para enviar patrimonio Roteador -->
         <div>
             <input type="text" id="patrimonioroteador" placeholder="Digite o patrimonio do Roteador">
-            <button class="btn" onclick="enviarPatrimonio('roteador')">Enviar Patrimonio Roteador</button>
+            <button class="btn" onclick="enviarPatrimonio('Roteador')">Enviar Patrimonio Roteador</button>
         </div>
 
         <!-- Atendimento Externo -->
@@ -129,8 +129,10 @@
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
-    <div id="patrimonios" class="tab-content">
-        <h2>Lista de Patrimônios Retirados</h2>
+    <div id="patrimonios" class="tab-content" style="display: none;">
+    <h3>Patrimônios Retirados</h3>
+    <ul id="listaPatrimonios"></ul>
+</div>
 
         <!-- Tabela de patrimônios -->
         <table id="patrimoniosTable">
