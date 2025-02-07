@@ -129,6 +129,12 @@
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
+    <div id="dashboardPatrimônios" class="tab-content">
+    <h2>Dashboard Patrimônios</h2>
+    <canvas id="graficoPatrimonios"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <div id="patrimonios" class="tab-content" style="display: none;">
     <h3>Patrimônios Retirados</h3>
     <ul id="listaPatrimonios"></ul>
@@ -159,7 +165,7 @@
             <svg id="myChart" width="1600" height="400"></svg>
         </div>
 
-        <!-- Contadores de atendimentos -->
+        <!-- Contadores de patrimonios -->
         <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
         <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
         <div id="contadorPatrimonio" class="contador-item">Total Patrimônios: 0</div>
@@ -204,5 +210,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <script src="scripts.js"></script>
+<script src="scriptss.js"></script>
 </body>
 </html>
