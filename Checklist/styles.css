@@ -303,7 +303,3 @@ th {
         padding: 10px;
     }
 }
-
-.tab { cursor: pointer; padding: 10px; display: inline-block; background: #ddd; margin: 5px; }
-        .btn { margin: 5px; padding: 5px 10px; cursor: pointer; }
-        .hidden { display: none; }
