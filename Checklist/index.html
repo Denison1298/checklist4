@@ -5,62 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist e Atendimentos</title>
     <link rel="icon" href="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/icon.png?raw=true" type="image/png">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-100">
-
-<header class="bg-blue-600 text-white py-4 shadow-lg">
-    <div class="container mx-auto flex items-center justify-between">
-        <img src="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/Logo.png?raw=true" alt="Fivecoin Logo" class="h-12">
-        <h1 class="text-xl font-bold">Checklist e Atendimentos</h1>
+<body>
+<header>
+    <div class="logo-container">
+        <img src="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/Logo.png?raw=true" alt="Fivecoin Logo" class="logo">
     </div>
+    <h1>Checklist e Atendimentos</h1>
 </header>
 
-<div class="container mx-auto mt-5">
-    <div class="tabs flex justify-center space-x-4 mb-4">
-        <button class="tab btn btn-primary" onclick="showTabContent('checklist')">Checklist</button>
-        <button class="tab btn btn-primary" onclick="showTabContent('atendimentos')">Atendimentos Mensais</button>
-        <button class="tab btn btn-primary" onclick="showTabContent('dashboard')">Dashboard</button>
+<div class="container">
+    <div class="tabs">
+        <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
+        <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
+        <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
     </div>
 
-    <div id="checklist" class="tab-content active p-5 bg-white rounded-lg shadow-lg">
-        <h2 class="text-center text-2xl font-semibold mb-4">Checklist de Atendimentos</h2>
+    <div id="checklist" class="tab-content active">
+        <h2>Checklist de Atendimentos</h2>
 
         <!-- Atendimento Interno -->
-        <h3 class="text-lg font-semibold">Atendimento Interno</h3>
-        <div class="flex flex-col items-center space-y-3">
-            <input type="text" id="protocoloInterno" class="form-control w-1/2 p-2 border rounded" placeholder="Digite o protocolo do Atendimento Interno">
-            <button class="btn btn-success w-1/2 py-3 text-lg" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
+        <h3>Atendimento Interno</h3>
+        
+        <!-- Campo e botão para enviar Atendimento Interno -->
+        <div>
+            <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
+            <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
 
         <!-- Atendimento Externo -->
-        <h3 class="text-lg font-semibold mt-5">Atendimento Externo</h3>
-        <div class="flex flex-col items-center space-y-3">
-            <input type="text" id="protocoloExterno" class="form-control w-1/2 p-2 border rounded" placeholder="Digite o protocolo do Atendimento Externo">
-            <button class="btn btn-warning w-1/2 py-3 text-lg" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
+        <h3>Atendimento Externo</h3>
+
+        <!-- Campo e botão para enviar Atendimento Externo -->
+        <div>
+            <input type="text" id="protocoloExterno" placeholder="Digite o protocolo do Atendimento Externo">
+            <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
         </div>
 
         <!-- Mensagem de sucesso -->
-        <div id="successMessage" class="success-message text-center mt-4 text-green-600 font-semibold"></div>
+        <div id="successMessage" class="success-message"></div>
     </div>
 
-    <div id="atendimentos" class="tab-content hidden p-5 bg-white rounded-lg shadow-lg">
-        <h2 class="text-center text-2xl font-semibold mb-4">Lista de Atendimentos</h2>
+    <div id="atendimentos" class="tab-content">
+        <h2>Lista de Atendimentos</h2>
 
-        <div class="text-center mb-4">
-            <button id="toggleAtendimentosAnteriores" class="btn btn-secondary" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
-            <button id="limparAtendimentos" class="btn btn-danger" onclick="limparAtendimentos()">Limpar Atendimentos</button>
-        </div>
+        <!-- Botão para exibir/ocultar atendimentos do dia anterior -->
+        <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
 
-        <table class="table table-striped text-center">
-            <thead class="bg-gray-200">
+        <!-- Botão para limpar lista de atendimentos -->
+        <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
+        
+        <!-- Tabela de atendimentos -->
+        <table id="atendimentosTable">
+            <thead>
                 <tr>
                     <th>Tipo de Atendimento</th>
                     <th>Protocolo</th>
@@ -68,48 +66,40 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="atendimentosTable">
+            <tbody>
                 <!-- Linhas de atendimento serão adicionadas aqui -->
             </tbody>
         </table>
-
-        <div class="text-center mt-4">
-            <button class="btn btn-dark" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
-        </div>
+        
+        <!-- Botão para gerar relatório em PDF -->
+        <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
-    <div id="dashboard" class="tab-content hidden p-5 bg-white rounded-lg shadow-lg">
-        <h2 class="text-center text-2xl font-semibold mb-4">Dashboard</h2>
+    <div id="dashboard" class="tab-content">
+        <h2>Dashboard</h2>
 
-        <div class="text-center">
-            <button id="toggleDiasAnteriores" class="btn btn-info" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
+        <!-- Botão para ocultar/exibir dias anteriores no gráfico -->
+        <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
+
+        <div class="chart-container">
+            <svg id="myChart" width="1600" height="400"></svg>
         </div>
 
-        <div class="chart-container mt-5 flex justify-center">
-            <svg id="myChart" width="1000" height="400"></svg>
-        </div>
-
-        <div class="flex flex-wrap justify-center mt-4 gap-4">
-            <div id="contadorInterno" class="bg-blue-500 text-white p-4 rounded-lg shadow-md">Total Interno: 0</div>
-            <div id="contadorExterno" class="bg-green-500 text-white p-4 rounded-lg shadow-md">Total Externo: 0</div>
-            <div id="contadorGeral" class="bg-purple-500 text-white p-4 rounded-lg shadow-md">Total Geral: 0</div>
-            <div id="contadorMedia" class="bg-orange-500 text-white p-4 rounded-lg shadow-md">Média de Atendimentos Diários: 0</div>
-        </div>
+        <!-- Contadores de atendimentos -->
+        <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
+        <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
+        <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
+        <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
     </div>
 
-    <!-- Texto de crédito -->
-    <div class="text-center mt-5">
-        <p class="text-gray-600">Desenvolvido por Denison Santos</p>
-    </div>
+<!-- Texto de crédito -->
+<div style="text-align: center; margin-top: 10px;">
+    <p>Desenvolvido por Denison Santos</p>
 </div>
 
 <!-- Inclusão do script jsPDF e jsPDF autotable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <script src="scripts.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
