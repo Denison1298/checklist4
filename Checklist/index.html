@@ -21,7 +21,7 @@
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
         <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
-        <div class="tab" onclick="showTabContent('dashboardPatrimônios')">Dashboard Patrimônios</div>
+        <div class="tab" onclick="showTabContent('dashboardPatrimonios')">Dashboard Patrimônios</div>
     </div>
 
     <div id="checklist" class="tab-content active">
@@ -37,14 +37,6 @@
             <input type="checkbox" id="retirouEquipamentoInterno">
             <label for="retirouEquipamentoInterno">Questionar se retirou equipamento <span class="obrigatorio">(Obrigatório)</span></label>
         </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="fotoAmplaInterno">
-            <label for="fotoAmplaInterno">Foto ampla <span class="obrigatorio">(Obrigatório)</span></label>
-        </div> 
-        <div class="checklist-item">
-            <input type="checkbox" id="acessoRemotoInterno">
-            <label for="acessoRemotoInterno">Acesso remoto <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
 
         <!-- Campo e botão para enviar Atendimento Interno -->
         <div>
@@ -52,49 +44,16 @@
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
 
-        <!-- Campo e botão para enviar patrimonio onu -->
+        <!-- Campo e botão para enviar patrimônio ONU -->
         <div>
-            <input type="text" id="patrimonioonu" placeholder="Digite o patrimonio da onu">
-            <button class="btn" onclick="enviarPatrimonio('ONU')">Enviar Patrimonio ONU</button>
+            <input type="text" id="patrimonioOnu" placeholder="Digite o patrimônio da ONU">
+            <button class="btn" onclick="enviarPatrimonio('ONU')">Enviar Patrimônio ONU</button>
         </div>
 
-        <!-- Campo e botão para enviar patrimonio Roteador -->
+        <!-- Campo e botão para enviar patrimônio Roteador -->
         <div>
-            <input type="text" id="patrimonioroteador" placeholder="Digite o patrimonio do Roteador">
-            <button class="btn" onclick="enviarPatrimonio('Roteador')">Enviar Patrimonio Roteador</button>
-        </div>
-
-        <!-- Atendimento Externo -->
-        <h3>Atendimento Externo</h3>
-        <div class="checklist-item">
-            <input type="checkbox" id="confirmarClienteExterno">
-            <label for="confirmarClienteExterno">Confirmar o cliente <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="retirouEquipamentoExterno">
-            <label for="retirouEquipamentoExterno">Questionar se retirou equipamento <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="fotoCTOExterno">
-            <label for="fotoCTOExterno">Foto da CTO <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="idCTOExterno">
-            <label for="idCTOExterno">ID na CTO <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="fotoAmplaExterno">
-            <label for="fotoAmplaExterno">Foto ampla <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-        <div class="checklist-item">
-            <input type="checkbox" id="acessoRemotoExterno">
-            <label for="acessoRemotoExterno">Acesso remoto <span class="obrigatorio">(Obrigatório)</span></label>
-        </div>
-
-        <!-- Campo e botão para enviar Atendimento Externo -->
-        <div>
-            <input type="text" id="protocoloExterno" placeholder="Digite o protocolo do Atendimento Externo">
-            <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
+            <input type="text" id="patrimonioRoteador" placeholder="Digite o patrimônio do Roteador">
+            <button class="btn" onclick="enviarPatrimonio('Roteador')">Enviar Patrimônio Roteador</button>
         </div>
 
         <!-- Mensagem de sucesso -->
@@ -103,9 +62,6 @@
 
     <div id="atendimentos" class="tab-content">
         <h2>Lista de Atendimentos</h2>
-
-        <!-- Botão para exibir/ocultar atendimentos do dia anterior -->
-        <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
 
         <!-- Botão para limpar lista de atendimentos -->
         <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
@@ -124,41 +80,30 @@
                 <!-- Linhas de atendimento serão adicionadas aqui -->
             </tbody>
         </table>
-        
+
         <!-- Botão para gerar relatório em PDF -->
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
+        <canvas id="graficoAtendimentos"></canvas>
 
-        <!-- Botão para ocultar/exibir dias anteriores no gráfico -->
-        <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
-
-        <div class="chart-container">
-            <svg id="myChart" width="1600" height="400"></svg>
-        </div>
-
-        <!-- Contadores de patrimonios -->
-        <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
-        <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
-        <div id="contadorPatrimonio" class="contador-item">Total Patrimônios: 0</div>
-        <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
-        <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
+        <!-- Contadores -->
+        <div id="contadorInterno">Total Interno: 0</div>
+        <div id="contadorExterno">Total Externo: 0</div>
+        <div id="contadorPatrimonio">Total Patrimônios: 0</div>
     </div>
 
-<div id="dashboardPatrimônios" class="tab-content">
-    <h2>Dashboard Patrimônios</h2>
-    <canvas id="graficoPatrimonios"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div id="dashboardPatrimonios" class="tab-content">
+        <h2>Dashboard Patrimônios</h2>
+        <canvas id="graficoPatrimonios"></canvas>
+    </div>
 
-    <div id="patrimonios" class="tab-content" style="display: none;">
-    <h3>Patrimônios Retirados</h3>
-    <ul id="listaPatrimonios"></ul>
-</div>
-
-        <!-- Tabela de patrimônios -->
+    <div id="patrimonios" class="tab-content">
+        <h3>Patrimônios Retirados</h3>
+        <ul id="listaPatrimonios"></ul>
+        
         <table id="patrimoniosTable">
             <thead>
                 <tr>
@@ -171,21 +116,21 @@
                 <!-- Linhas de patrimônio serão adicionadas aqui -->
             </tbody>
         </table>
+        
+        <button class="btn" onclick="gerarRelatorioPatrimoniosPDF()">Gerar Relatório Mensal de Patrimônios em PDF</button>
     </div>
-    
-    <!-- Botão para gerar relatório em PDF -->
-    <button class="btn" onclick="gerarRelatorioPatrimoniosPDF()">Gerar Relatório Mensal de Patrimônios em PDF</button>
 </div>
 
 <!-- Texto de crédito -->
 <div style="text-align: center; margin-top: 10px;">
     <p>Desenvolvido por Denison Santos</p>
 </div>
-    
-<!-- Inclusão do script jsPDF e jsPDF autotable -->
+
+<!-- Scripts necessários -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="scripts.js"></script>
-<script src="scriptss.js"></script>
+
 </body>
 </html>
