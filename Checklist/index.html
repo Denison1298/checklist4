@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist e Atendimentos</title>
+    <title>Atendimentos</title>
     <link rel="icon" href="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/icon.png?raw=true" type="image/png">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header>
@@ -19,9 +20,9 @@
     <div class="tabs">
         <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
-        <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard Patrimônios</div>
+        <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
     </div>
 
     <div id="checklist" class="tab-content active">
@@ -52,17 +53,25 @@
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
 
-        <!-- Campo e botão para enviar patrimonio onu -->
-        <div>
-            <input type="text" id="patrimonioonu" placeholder="Digite o patrimonio da onu">
-            <button class="btn" onclick="enviarPatrimonio('onu')">Enviar Patrimonio ONU</button>
-        </div>
+       <div id="dashboard" class="hidden">
+        <canvas id="patrimonioChart"></canvas>
+    </div>
 
-        <!-- Campo e botão para enviar patrimonio Roteador -->
-        <div>
-            <input type="text" id="patrimonioroteador" placeholder="Digite o patrimonio do Roteador">
-            <button class="btn" onclick="enviarPatrimonio('roteador')">Enviar Patrimonio Roteador</button>
-        </div>
+    <div id="patrimonios" class="hidden">
+        <ul id="listaPatrimonios"></ul>
+    </div>
+
+    <!-- Campo e botão para enviar patrimônio ONU -->
+    <div>
+        <input type="text" id="patrimonioonu" placeholder="Digite o patrimônio da ONU">
+        <button class="btn" onclick="enviarPatrimonio('onu')">Enviar Patrimônio ONU</button>
+    </div>
+
+    <!-- Campo e botão para enviar patrimônio Roteador -->
+    <div>
+        <input type="text" id="patrimonioroteador" placeholder="Digite o patrimônio do Roteador">
+        <button class="btn" onclick="enviarPatrimonio('roteador')">Enviar Patrimônio Roteador</button>
+    </div>
 
         <!-- Atendimento Externo -->
         <h3>Atendimento Externo</h3>
