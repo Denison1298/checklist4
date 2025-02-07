@@ -387,3 +387,16 @@ function toggleDiasAnteriores() {
     atualizarGrafico(ocultar);
     botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
 }
+
+function enviarPatrimonio(item) {
+        let lista = document.getElementById("listaPatrimonios");
+        let novoItem = document.createElement("li");
+        novoItem.textContent = item;
+        lista.appendChild(novoItem);
+        alert(item + " enviado para Patrimônios Retirados!");
+    }
+
+    function showTabContent(tabId) {
+        let tabContent = document.getElementById(tabId);
+        tabContent.style.display = tabContent.style.display === "none" ? "block" : "none";
+    }
