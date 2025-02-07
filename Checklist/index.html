@@ -20,8 +20,6 @@
         <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
-        <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
-        <div class="tab" onclick="showTabContent('dashboardPatrimônios')">Dashboard Patrimônios</div>
     </div>
 
     <div id="checklist" class="tab-content active">
@@ -50,18 +48,6 @@
         <div>
             <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
-        </div>
-
-        <!-- Campo e botão para enviar patrimonio onu -->
-        <div>
-            <input type="text" id="patrimonioonu" placeholder="Digite o patrimonio da onu">
-            <button class="btn" onclick="enviarPatrimonio('ONU')">Enviar Patrimonio ONU</button>
-        </div>
-
-        <!-- Campo e botão para enviar patrimonio Roteador -->
-        <div>
-            <input type="text" id="patrimonioroteador" placeholder="Digite o patrimonio do Roteador">
-            <button class="btn" onclick="enviarPatrimonio('Roteador')">Enviar Patrimonio Roteador</button>
         </div>
 
         <!-- Atendimento Externo -->
@@ -129,26 +115,6 @@
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
-    <div id="patrimonios" class="tab-content" style="display: none;">
-    <h3>Patrimônios Retirados</h3>
-    <ul id="listaPatrimonios"></ul>
-</div>
-
-        <!-- Tabela de patrimônios -->
-        <table id="patrimoniosTable">
-            <thead>
-                <tr>
-                    <th>Tipo de Patrimônio</th>
-                    <th>Identificação</th>
-                    <th>Data e Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Linhas de patrimônio serão adicionadas aqui -->
-            </tbody>
-        </table>
-    </div>
-
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
 
@@ -159,51 +125,21 @@
             <svg id="myChart" width="1600" height="400"></svg>
         </div>
 
-        <!-- Contadores de patrimonios -->
+        <!-- Contadores de atendimentos -->
         <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
         <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
-        <div id="contadorPatrimonio" class="contador-item">Total Patrimônios: 0</div>
         <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
         <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
     </div>
-
-    <div id="patrimonios" class="tab-content">
-    <h2>Lista de Patrimônios Retirados</h2>
-
-    <!-- Botão para exibir/ocultar patrimônios do dia anterior -->
-    <button id="togglePatrimoniosAnteriores" class="btn" onclick="togglePatrimoniosAnteriores()">Ocultar Patrimônios Anteriores</button>
-
-    <!-- Botão para limpar lista de patrimônios -->
-    <button id="limparPatrimonios" class="btn" onclick="limparPatrimonios()">Limpar Patrimônios</button>
-    
-    <!-- Tabela de patrimônios -->
-    <table id="patrimoniosTable">
-        <thead>
-            <tr>
-                <th>Tipo de Patrimônio</th>
-                <th>Identificação</th>
-                <th>Data e Hora</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Linhas de patrimônio serão adicionadas aqui -->
-        </tbody>
-    </table>
-    
-    <!-- Botão para gerar relatório em PDF -->
-    <button class="btn" onclick="gerarRelatorioPatrimoniosPDF()">Gerar Relatório Mensal de Patrimônios em PDF</button>
-</div>
 
 <!-- Texto de crédito -->
 <div style="text-align: center; margin-top: 10px;">
     <p>Desenvolvido por Denison Santos</p>
 </div>
-    
+
 <!-- Inclusão do script jsPDF e jsPDF autotable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <script src="scripts.js"></script>
-<script src="scriptss.js"></script>
 </body>
 </html>
