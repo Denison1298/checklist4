@@ -35,7 +35,7 @@ window.onload = function() {
         showTabContent('checklist');  // Aba padrão
     }
     
-    // Carregar atendimentos e atualizar o gráfico e contadores
+   // Carregar atendimentos e atualizar o gráfico e contadores
     carregarAtendimentos();
     atualizarGrafico();
     atualizarContadores();
@@ -386,4 +386,180 @@ function toggleDiasAnteriores() {
 
     atualizarGrafico(ocultar);
     botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Manter a aba ativa após atualização da página
+    const activeTab = localStorage.getItem("activeTab") || "checklist";
+    showTabContent(activeTab);
+
+    // Carregar atendimentos e atualizar o gráfico e contadores
+    carregarAtendimentos();
+    atualizarGrafico();
+    atualizarContadores();
+
+    // Restaurar o estado do botão de exibição/ocultação dos atendimentos anteriores
+    restaurarEstadoBotaoAtendimentos();
+});
+
+// ✅ Função para exibir o conteúdo da aba e salvar no localStorage
+function showTabContent(tabId) {
+    // Esconder todas as abas
+    document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.add("hidden");
+    });
+
+    // Mostrar a aba selecionada
+    document.getElementById(tabId).classList.remove("hidden");
+
+    // Salvar a aba ativa
+    localStorage.setItem("activeTab", tabId);
+}
+
+// ✅ Função para enviar atendimento (corrigida)
+function enviarProtocolo(tipo) {
+    const inputId = `protocolo${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`;
+    const protocoloInput = document.getElementById(inputId);
+    const protocolo = protocoloInput.value.trim();
+
+    if (protocolo === "") {
+        alert("Por favor, insira um protocolo válido.");
+        return;
+    }
+
+    if (protocoloDuplicado(protocolo)) {
+        alert("Protocolo duplicado. Por favor, insira um protocolo único.");
+        return;
+    }
+
+    adicionarAtendimento(tipo, protocolo);
+    mostrarMensagemSucesso(`Atendimento ${tipo} enviado com sucesso!`);
+    protocoloInput.value = "";
+    atualizarGrafico();
+    atualizarContadores();
+}
+
+// ✅ Função para adicionar atendimento e salvar no localStorage
+function adicionarAtendimento(tipo, protocolo) {
+    const tabela = document.getElementById("atendimentosTable").querySelector("tbody");
+    const novaLinha = tabela.insertRow();
+    const celulaTipo = novaLinha.insertCell(0);
+    const celulaProtocolo = novaLinha.insertCell(1);
+    const celulaDataHora = novaLinha.insertCell(2);
+    const celulaAcoes = novaLinha.insertCell(3);
+
+    const dataHoraAtual = new Date().toLocaleString("pt-BR");
+
+    celulaTipo.innerText = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+    celulaProtocolo.innerText = protocolo;
+    celulaDataHora.innerText = dataHoraAtual;
+    celulaAcoes.innerHTML = `<button class="btn btn-danger btn-sm" onclick="removerAtendimento(this)">Remover</button>`;
+
+    salvarAtendimentos();
+}
+
+// ✅ Função para remover atendimento
+function removerAtendimento(botao) {
+    const linha = botao.closest("tr");
+    linha.remove();
+    salvarAtendimentos();
+    atualizarGrafico();
+    atualizarContadores();
+}
+
+// ✅ Função para verificar protocolos duplicados
+function protocoloDuplicado(protocolo) {
+    const linhas = document.querySelectorAll("#atendimentosTable tbody tr");
+    return Array.from(linhas).some(linha => linha.cells[1].innerText === protocolo);
+}
+
+// ✅ Função para salvar atendimentos no localStorage
+function salvarAtendimentos() {
+    const atendimentos = [];
+    document.querySelectorAll("#atendimentosTable tbody tr").forEach(linha => {
+        atendimentos.push({
+            tipo: linha.cells[0].innerText,
+            protocolo: linha.cells[1].innerText,
+            dataHora: linha.cells[2].innerText,
+        });
+    });
+    localStorage.setItem("atendimentos", JSON.stringify(atendimentos));
+}
+
+// ✅ Função para carregar atendimentos do localStorage
+function carregarAtendimentos() {
+    const atendimentos = JSON.parse(localStorage.getItem("atendimentos")) || [];
+    const tabela = document.getElementById("atendimentosTable").querySelector("tbody");
+    tabela.innerHTML = "";
+
+    atendimentos.forEach(atendimento => {
+        const novaLinha = tabela.insertRow();
+        novaLinha.insertCell(0).innerText = atendimento.tipo;
+        novaLinha.insertCell(1).innerText = atendimento.protocolo;
+        novaLinha.insertCell(2).innerText = atendimento.dataHora;
+        novaLinha.insertCell(3).innerHTML = `<button class="btn btn-danger btn-sm" onclick="removerAtendimento(this)">Remover</button>`;
+    });
+}
+
+// ✅ Função para limpar a lista de atendimentos
+function limparAtendimentos() {
+    if (confirm("Tem certeza que deseja limpar todos os atendimentos? Esta ação não pode ser desfeita.")) {
+        document.getElementById("atendimentosTable").querySelector("tbody").innerHTML = "";
+        localStorage.removeItem("atendimentos");
+        atualizarGrafico();
+        atualizarContadores();
+        mostrarMensagemSucesso("Todos os atendimentos foram limpos com sucesso!");
+    }
+}
+
+// ✅ Função para mostrar a mensagem de sucesso
+function mostrarMensagemSucesso(mensagem) {
+    const successMessage = document.getElementById("successMessage");
+    successMessage.innerText = mensagem;
+    successMessage.classList.remove("hidden");
+
+    setTimeout(() => {
+        successMessage.classList.add("hidden");
+    }, 3000);
+}
+
+// ✅ Função para atualizar os contadores de atendimentos
+function atualizarContadores() {
+    const linhas = document.querySelectorAll("#atendimentosTable tbody tr");
+    let totalInterno = 0;
+    let totalExterno = 0;
+
+    linhas.forEach(linha => {
+        const tipo = linha.cells[0].innerText.toLowerCase();
+        if (tipo === "interno") totalInterno++;
+        if (tipo === "externo") totalExterno++;
+    });
+
+    const totalGeral = totalInterno + totalExterno;
+    document.getElementById("contadorInterno").innerText = `Total Interno: ${totalInterno}`;
+    document.getElementById("contadorExterno").innerText = `Total Externo: ${totalExterno}`;
+    document.getElementById("contadorGeral").innerText = `Total Geral: ${totalGeral}`;
+}
+
+// ✅ Função para alternar a exibição dos atendimentos anteriores
+function toggleAtendimentosAnteriores() {
+    const linhas = document.querySelectorAll("#atendimentosTable tbody tr");
+    const botao = document.getElementById("toggleAtendimentosAnteriores");
+    const ocultar = botao.innerText.includes("Ocultar");
+
+    linhas.forEach(linha => {
+        const dataAtendimento = linha.cells[2].innerText.split(" ")[0];
+        if (!ehHoje(dataAtendimento)) {
+            linha.classList.toggle("hidden", ocultar);
+        }
+    });
+
+    botao.innerText = ocultar ? "Exibir Atendimentos Anteriores" : "Ocultar Atendimentos Anteriores";
+    localStorage.setItem("botaoOcultarAtendimentos", ocultar ? "exibir" : "ocultar");
+}
+
+// ✅ Função para verificar se a data é de hoje
+function ehHoje(data) {
+    const hoje = new Date().toLocaleDateString("pt-BR");
+    return data === hoje;
 }
