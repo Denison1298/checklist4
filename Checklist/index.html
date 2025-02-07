@@ -21,7 +21,6 @@
         <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
         <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
-        <div class="tab" onclick="showTabContent('dashboard')">Dashboard Patrimônios</div>
         <div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
     </div>
 
@@ -52,26 +51,6 @@
             <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
-
-       <div id="dashboard" class="hidden">
-        <canvas id="patrimonioChart"></canvas>
-    </div>
-
-    <div id="patrimonios" class="hidden">
-        <ul id="listaPatrimonios"></ul>
-    </div>
-
-    <!-- Campo e botão para enviar patrimônio ONU -->
-    <div>
-        <input type="text" id="patrimonioonu" placeholder="Digite o patrimônio da ONU">
-        <button class="btn" onclick="enviarPatrimonio('onu')">Enviar Patrimônio ONU</button>
-    </div>
-
-    <!-- Campo e botão para enviar patrimônio Roteador -->
-    <div>
-        <input type="text" id="patrimonioroteador" placeholder="Digite o patrimônio do Roteador">
-        <button class="btn" onclick="enviarPatrimonio('roteador')">Enviar Patrimônio Roteador</button>
-    </div>
 
         <!-- Atendimento Externo -->
         <h3>Atendimento Externo</h3>
@@ -163,7 +142,7 @@
         <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
 
         <div class="chart-container">
-            <svg id="myChart" width="1600" height="400"></svg>
+            <canvas id="myChart" width="1600" height="400"></canvas>
         </div>
 
         <!-- Contadores de atendimentos -->
@@ -174,9 +153,10 @@
         <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
     </div>
 
-<!-- Texto de crédito -->
-<div style="text-align: center; margin-top: 10px;">
-    <p>Desenvolvido por Denison Santos</p>
+    <!-- Texto de crédito -->
+    <div style="text-align: center; margin-top: 10px;">
+        <p>Desenvolvido por Denison Santos</p>
+    </div>
 </div>
 
 <!-- Inclusão do script jsPDF e jsPDF autotable -->
