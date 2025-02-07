@@ -199,33 +199,7 @@
 <div style="text-align: center; margin-top: 10px;">
     <p>Desenvolvido por Denison Santos</p>
 </div>
-
-    <button class="btn" onclick="enviarPatrimonio('ONU')">Enviar Patrimonio ONU</button>
-<button class="btn" onclick="enviarPatrimonio('Roteador')">Enviar Patrimonio Roteador</button>
-
-<div class="tab" onclick="showTabContent('patrimonios')">Patrimônios Retirados</div>
-
-<div id="patrimonios" class="tab-content" style="display: none;">
-    <h3>Patrimônios Retirados</h3>
-    <ul id="listaPatrimonios"></ul>
-</div>
-
-<script>
-    function enviarPatrimonio(item) {
-        let lista = document.getElementById("listaPatrimonios");
-        let novoItem = document.createElement("li");
-        novoItem.textContent = item;
-        lista.appendChild(novoItem);
-        alert(item + " enviado para Patrimônios Retirados!");
-    }
-
-    function showTabContent(tabId) {
-        let tabContent = document.getElementById(tabId);
-        tabContent.style.display = tabContent.style.display === "none" ? "block" : "none";
-    }
-</script>
-
-
+    
 <!-- Inclusão do script jsPDF e jsPDF autotable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
