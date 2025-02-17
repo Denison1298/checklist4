@@ -15,6 +15,17 @@
     <style>
         .tab-content { display: none; }
         .active { display: block; }
+        .chart-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            margin: auto;
+        }
+        #myChart {
+            width: 100%;
+            height: 100%;
+            background: white; /* Corrige o fundo preto */
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -43,15 +54,15 @@
 
             <!-- Atendimento Interno -->
             <h3 class="text-lg font-semibold text-white">Atendimento Interno</h3>
-            <div class="mb-4 flex gap-2">
-                <input type="text" id="protocoloInterno" class="form-control w-50" placeholder="Digite o protocolo do Atendimento Interno">
+            <div class="mb-4 flex flex-col md:flex-row gap-2">
+                <input type="text" id="protocoloInterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Interno">
                 <button class="btn btn-primary" onclick="enviarProtocolo('interno')">Enviar</button>
             </div>
 
             <!-- Atendimento Externo -->
             <h3 class="text-lg font-semibold text-white">Atendimento Externo</h3>
-            <div class="mb-4 flex gap-2">
-                <input type="text" id="protocoloExterno" class="form-control w-50" placeholder="Digite o protocolo do Atendimento Externo">
+            <div class="mb-4 flex flex-col md:flex-row gap-2">
+                <input type="text" id="protocoloExterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Externo">
                 <button class="btn btn-primary" onclick="enviarProtocolo('externo')">Enviar</button>
             </div>
 
@@ -63,27 +74,28 @@
         <div id="atendimentos" class="tab-content bg-gray-800 p-6 rounded shadow-lg">
             <h2 class="text-2xl font-bold mb-4 text-green-300">Lista de Atendimentos</h2>
 
-            <div class="flex gap-4">
+            <div class="flex flex-col md:flex-row gap-4">
                 <button id="toggleAtendimentosAnteriores" class="btn btn-warning" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
                 <button id="limparAtendimentos" class="btn btn-danger" onclick="limparAtendimentos()">Limpar Atendimentos</button>
             </div>
 
-            <!-- Tabela -->
-            <table id="atendimentosTable" class="table table-striped table-dark mt-4">
-                <thead>
-                    <tr>
-                        <th>Tipo de Atendimento</th>
-                        <th>Protocolo</th>
-                        <th>Data e Hora</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Linhas de atendimento serão adicionadas aqui -->
-                </tbody>
-            </table>
+            <!-- Tabela responsiva -->
+            <div class="overflow-x-auto mt-4">
+                <table id="atendimentosTable" class="table table-striped table-dark w-full">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Protocolo</th>
+                            <th>Data e Hora</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas de atendimento serão adicionadas aqui -->
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- Gerar Relatório -->
             <button class="btn btn-success mt-3" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
         </div>
 
@@ -91,17 +103,19 @@
         <div id="dashboard" class="tab-content bg-gray-800 p-6 rounded shadow-lg">
             <h2 class="text-2xl font-bold mb-4 text-red-300">Dashboard</h2>
 
-            <button id="toggleDiasAnteriores" class="btn btn-info" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
+            <button id="toggleDiasAnteriores" class="btn btn-info mb-4" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
 
-            <div class="chart-container mt-4">
-                <svg id="myChart" width="1600" height="400"></svg>
+            <!-- Gráfico -->
+            <div class="chart-container">
+                <svg id="myChart"></svg>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                <div class="bg-gray-700 p-3 rounded shadow-lg text-center">Total Interno: <span id="contadorInterno">0</span></div>
-                <div class="bg-gray-700 p-3 rounded shadow-lg text-center">Total Externo: <span id="contadorExterno">0</span></div>
-                <div class="bg-gray-700 p-3 rounded shadow-lg text-center">Total Geral: <span id="contadorGeral">0</span></div>
-                <div class="bg-gray-700 p-3 rounded shadow-lg text-center">Média Diária: <span id="contadorMedia">0</span></div>
+            <!-- Contadores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 text-center">
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Interno: <span id="contadorInterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Externo: <span id="contadorExterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Geral: <span id="contadorGeral">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Média Diária: <span id="contadorMedia">0</span></div>
             </div>
         </div>
 
@@ -111,9 +125,7 @@
         </footer>
     </div>
 
-    <!-- Bibliotecas JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <!-- Scripts -->
     <script src="scripts.js"></script>
 
     <!-- JS para Tabs -->
