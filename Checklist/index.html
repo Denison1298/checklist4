@@ -15,16 +15,25 @@
     <style>
         .tab-content { display: none; }
         .active { display: block; }
+
+        /* Ajusta o gráfico */
         .chart-container {
             width: 100%;
             max-width: 1200px;
             height: 400px;
             margin: auto;
+            overflow-x: auto; /* Ativa a barra de rolagem horizontal */
+            background-color: #f8f9fa; /* Cor de fundo clara */
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
         }
         #myChart {
-            width: 100%;
+            min-width: 800px; /* Garante que o gráfico possa ser rolado */
             height: 100%;
-            background: white; /* Corrige o fundo preto */
+            background: #ffffff; /* Fundo branco */
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -48,28 +57,6 @@
             <button class="tablinks p-3 bg-red-600 hover:bg-red-700 text-white rounded shadow-lg transition" onclick="showTabContent('dashboard')">Dashboard</button>
         </div>
 
-        <!-- Tab: Checklist -->
-        <div id="checklist" class="tab-content active bg-gray-800 p-6 rounded shadow-lg">
-            <h2 class="text-2xl font-bold mb-4 text-yellow-400">Checklist de Atendimentos</h2>
-
-            <!-- Atendimento Interno -->
-            <h3 class="text-lg font-semibold text-white">Atendimento Interno</h3>
-            <div class="mb-4 flex flex-col md:flex-row gap-2">
-                <input type="text" id="protocoloInterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Interno">
-                <button class="btn btn-primary" onclick="enviarProtocolo('interno')">Enviar</button>
-            </div>
-
-            <!-- Atendimento Externo -->
-            <h3 class="text-lg font-semibold text-white">Atendimento Externo</h3>
-            <div class="mb-4 flex flex-col md:flex-row gap-2">
-                <input type="text" id="protocoloExterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Externo">
-                <button class="btn btn-primary" onclick="enviarProtocolo('externo')">Enviar</button>
-            </div>
-
-            <!-- Mensagem de sucesso -->
-            <div id="successMessage" class="alert alert-success hidden"></div>
-        </div>
-
         <!-- Tab: Atendimentos -->
         <div id="atendimentos" class="tab-content bg-gray-800 p-6 rounded shadow-lg">
             <h2 class="text-2xl font-bold mb-4 text-green-300">Lista de Atendimentos</h2>
@@ -91,7 +78,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Linhas de atendimento serão adicionadas aqui -->
+                        <tr>
+                            <td>Interno</td>
+                            <td>123456</td>
+                            <td>2024-02-17 14:30</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">Remover</button> <!-- Agora em vermelho -->
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -105,7 +99,7 @@
 
             <button id="toggleDiasAnteriores" class="btn btn-info mb-4" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
 
-            <!-- Gráfico -->
+            <!-- Gráfico com rolagem -->
             <div class="chart-container">
                 <svg id="myChart"></svg>
             </div>
