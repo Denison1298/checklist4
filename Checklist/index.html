@@ -146,11 +146,45 @@
 
     <!-- JS para Tabs -->
     <script>
-        function showTabContent(tabName) {
-            let tabs = document.querySelectorAll(".tab-content");
-            tabs.forEach(tab => tab.classList.remove("active"));
-            document.getElementById(tabName).classList.add("active");
+    document.addEventListener("DOMContentLoaded", function () {
+        carregarGrafico();
+    });
+
+    function carregarGrafico() {
+        let ctx = document.getElementById("myChart").getContext("2d");
+
+        if (!ctx) {
+            console.error("Erro: O elemento 'myChart' não foi encontrado.");
+            return;
         }
-    </script>
+
+        let myChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Janeiro", "Fevereiro", "Março", "Abril"],
+                datasets: [{
+                    label: "Atendimentos",
+                    data: [10, 15, 8, 12],
+                    backgroundColor: "rgba(54, 162, 235, 0.6)", // Azul transparente
+                    borderColor: "rgba(54, 162, 235, 1)", // Borda azul forte
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { labels: { color: "#000" } } // Legenda em preto
+                }
+            }
+        });
+
+        // Garante que o gráfico tenha um fundo branco
+        document.getElementById("myChart").style.backgroundColor = "#ffffff";
+    }
+</script>
 </body>
 </html>
