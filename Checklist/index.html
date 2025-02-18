@@ -5,92 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist e Atendimentos</title>
     <link rel="icon" href="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/icon.png?raw=true" type="image/png">
-    <link rel="stylesheet" href="styles.css">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .tab-content { display: none; }
+        .active { display: block; }
+
+        /* Ajusta o gráfico */
+        .chart-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            margin: auto;
+            overflow-x: auto; /* Ativa a barra de rolagem horizontal */
+            background-color: #f8f9fa; /* Cor de fundo clara */
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        #myChart {
+            min-width: 800px; /* Garante que o gráfico possa ser rolado */
+            height: 100%;
+            background: #ffffff; /* Fundo branco */
+            border-radius: 8px;
+        }
+    </style>
 </head>
-<body>
-<header>
-    <div class="logo-container">
-        <img src="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/Logo.png?raw=true" alt="Fivecoin Logo" class="logo">
-    </div>
-    <h1>Checklist e Atendimentos</h1>
-</header>
+<body class="bg-gray-900 text-white">
 
-<div class="container">
-    <div class="tabs">
-        <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
-        <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
-        <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
-    </div>
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-center shadow-lg">
+        <div class="flex justify-center">
+            <img src="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/Logo.png?raw=true" alt="Fivecoin Logo" class="h-16">
+        </div>
+        <h1 class="text-2xl font-bold mt-3">Checklist e Atendimentos</h1>
+    </header>
 
-    <div id="checklist" class="tab-content active">
-        <h2>Checklist de Atendimentos</h2>
+    <!-- Container principal -->
+    <div class="container mx-auto mt-6">
 
-        <!-- Atendimento Interno -->
-        <h3>Atendimento Interno</h3>
-        
-        <!-- Campo e botão para enviar Atendimento Interno -->
-        <div>
-            <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
-            <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
+        <!-- Tabs -->
+        <div class="flex justify-center space-x-4 mb-6">
+            <button class="tablinks p-3 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-lg transition" onclick="showTabContent('checklist')">Checklist</button>
+            <button class="tablinks p-3 bg-green-600 hover:bg-green-700 text-white rounded shadow-lg transition" onclick="showTabContent('atendimentos')">Atendimentos Mensais</button>
+            <button class="tablinks p-3 bg-red-600 hover:bg-red-700 text-white rounded shadow-lg transition" onclick="showTabContent('dashboard')">Dashboard</button>
         </div>
 
-        <!-- Atendimento Externo -->
-        <h3>Atendimento Externo</h3>
+        <!-- Tab: Checklist -->
+        <div id="checklist" class="tab-content active bg-gray-800 p-6 rounded shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-yellow-400">Checklist de Atendimentos</h2>
 
-        <!-- Campo e botão para enviar Atendimento Externo -->
-        <div>
-            <input type="text" id="protocoloExterno" placeholder="Digite o protocolo do Atendimento Externo">
-            <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
+            <!-- Atendimento Interno -->
+            <h3 class="text-lg font-semibold text-white">Atendimento Interno</h3>
+            <div class="mb-4 flex flex-col md:flex-row gap-2">
+                <input type="text" id="protocoloInterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Interno">
+                <button class="btn btn-primary" onclick="enviarProtocolo('interno')">Enviar</button>
+            </div>
+
+            <!-- Atendimento Externo -->
+            <h3 class="text-lg font-semibold text-white">Atendimento Externo</h3>
+            <div class="mb-4 flex flex-col md:flex-row gap-2">
+                <input type="text" id="protocoloExterno" class="form-control md:w-1/2" placeholder="Digite o protocolo do Atendimento Externo">
+                <button class="btn btn-primary" onclick="enviarProtocolo('externo')">Enviar</button>
+            </div>
+
+            <!-- Mensagem de sucesso -->
+            <div id="successMessage" class="alert alert-success hidden"></div>
         </div>
 
-        <!-- Mensagem de sucesso -->
-        <div id="successMessage" class="success-message"></div>
-    </div>
+        <!-- Tab: Atendimentos -->
+        <div id="atendimentos" class="tab-content bg-gray-800 p-6 rounded shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-green-300">Lista de Atendimentos</h2>
 
-    <div id="atendimentos" class="tab-content">
-        <h2>Lista de Atendimentos</h2>
+            <div class="flex flex-col md:flex-row gap-4">
+                <button id="toggleAtendimentosAnteriores" class="btn btn-warning" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
+                <button id="limparAtendimentos" class="btn btn-danger" onclick="limparAtendimentos()">Limpar Atendimentos</button>
+            </div>
 
-        <!-- Botão para exibir/ocultar atendimentos do dia anterior -->
-        <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
+            <!-- Tabela responsiva -->
+            <div class="overflow-x-auto mt-4">
+                <table id="atendimentosTable" class="table table-striped table-dark w-full">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Protocolo</th>
+                            <th>Data e Hora</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="atendimentosBody">
+                        <!-- Linhas de atendimento serão adicionadas aqui pelo JavaScript -->
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Botão para limpar lista de atendimentos -->
-        <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
-        
-        <!-- Tabela de atendimentos -->
-        <table id="atendimentosTable">
-            <thead>
-                <tr>
-                    <th>Tipo de Atendimento</th>
-                    <th>Protocolo</th>
-                    <th>Data e Hora</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Linhas de atendimento serão adicionadas aqui -->
-            </tbody>
-        </table>
-        
-        <!-- Botão para gerar relatório em PDF -->
-        <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
-    </div>
-
-    <div id="dashboard" class="tab-content">
-        <h2>Dashboard</h2>
-
-        <!-- Botão para ocultar/exibir dias anteriores no gráfico -->
-        <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
-
-        <div class="chart-container">
-            <svg id="myChart" width="1600" height="400"></svg>
+            <button class="btn btn-success mt-3" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
         </div>
 
-        <!-- Contadores de atendimentos -->
-        <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
-        <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
-        <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
-        <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
-    </div>
+        <!-- Tab: Dashboard -->
+        <div id="dashboard" class="tab-content bg-gray-800 p-6 rounded shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-red-300">Dashboard</h2>
+
+            <button id="toggleDiasAnteriores" class="btn btn-info mb-4" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
+
+            <!-- Gráfico com rolagem -->
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
+
+            <!-- Contadores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 text-center">
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Interno: <span id="contadorInterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Externo: <span id="contadorExterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Geral: <span id="contadorGeral">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Média Diária: <span id="contadorMedia">0</span></div>
+            </div>
+        </div>
 
 <!-- Texto de crédito -->
 <div style="text-align: center; margin-top: 10px;">
@@ -101,5 +137,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <script src="scripts.js"></script>
+<!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JS para Tabs -->
+    <script>
+        function showTabContent(tabName) {
+            let tabs = document.querySelectorAll(".tab-content");
+            tabs.forEach(tab => tab.classList.remove("active"));
+            document.getElementById(tabName).classList.add("active");
+        }
+    </script>
 </body>
 </html>
