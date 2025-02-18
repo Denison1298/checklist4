@@ -147,11 +147,16 @@
     <!-- JS para Tabs -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        carregarDados(); // Carrega os dados salvos no Local Storage ao iniciar a página
         carregarGrafico();
     });
 
-    // Simula um banco de dados local para armazenar os atendimentos do dia
-    let atendimentosPorDia = {};
+    // Recupera os atendimentos salvos no Local Storage ou inicializa um objeto vazio
+    let atendimentosPorDia = JSON.parse(localStorage.getItem("atendimentosPorDia")) || {};
+
+    function salvarDados() {
+        localStorage.setItem("atendimentosPorDia", JSON.stringify(atendimentosPorDia));
+    }
 
     function adicionarAtendimento(tipo) {
         let dataHoje = new Date().toLocaleDateString("pt-BR");
@@ -166,6 +171,7 @@
             atendimentosPorDia[dataHoje].externo++;
         }
 
+        salvarDados(); // Salva no Local Storage
         atualizarContadores();
         carregarGrafico();
     }
@@ -174,7 +180,7 @@
         let totalInterno = 0;
         let totalExterno = 0;
 
-        // Calcula os totais com base nos dias disponíveis
+        // Calcula os totais com base nos dados salvos
         for (let dia in atendimentosPorDia) {
             totalInterno += atendimentosPorDia[dia].interno;
             totalExterno += atendimentosPorDia[dia].externo;
@@ -252,6 +258,11 @@
         });
 
         canvas.style.backgroundColor = "#ffffff";
+    }
+
+    function carregarDados() {
+        atualizarContadores();
+        carregarGrafico();
     }
 
     // Função chamada ao clicar no botão de adicionar atendimento
