@@ -150,50 +150,52 @@
         carregarGrafico();
     });
 
-    // Banco de dados local para armazenar os atendimentos por dia no mês atual
+    // Simula um banco de dados local para armazenar os atendimentos do dia
     let atendimentosPorDia = {};
 
     function adicionarAtendimento(tipo) {
         let dataHoje = new Date().toLocaleDateString("pt-BR");
 
         if (!atendimentosPorDia[dataHoje]) {
-            atendimentosPorDia[dataHoje] = 0;
+            atendimentosPorDia[dataHoje] = { interno: 0, externo: 0 };
         }
-        atendimentosPorDia[dataHoje]++;
+
+        if (tipo === "interno") {
+            atendimentosPorDia[dataHoje].interno++;
+        } else {
+            atendimentosPorDia[dataHoje].externo++;
+        }
 
         atualizarContadores();
         carregarGrafico();
     }
 
     function atualizarContadores() {
-        let totalAtendimentos = 0;
-        let diasUteis = 0;
-        let dataAtual = new Date();
-        let totalDiasNoMes = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0).getDate();
+        let totalInterno = 0;
+        let totalExterno = 0;
 
-        // Conta os atendimentos e os dias úteis do mês atual
-        for (let i = 1; i <= totalDiasNoMes; i++) {
-            let data = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), i);
-            let diaFormatado = data.toLocaleDateString("pt-BR");
-
-            if (atendimentosPorDia[diaFormatado]) {
-                totalAtendimentos += atendimentosPorDia[diaFormatado];
-                diasUteis++;
-            }
+        // Calcula os totais com base nos dias disponíveis
+        for (let dia in atendimentosPorDia) {
+            totalInterno += atendimentosPorDia[dia].interno;
+            totalExterno += atendimentosPorDia[dia].externo;
         }
 
-        let mediaDiaria = diasUteis > 0 ? totalAtendimentos / diasUteis : 0;
-        let estimativaFinalMes = mediaDiaria * totalDiasNoMes;
+        let totalGeral = totalInterno + totalExterno;
+        let diasComAtendimentos = Object.keys(atendimentosPorDia).length;
+        let mediaDiaria = diasComAtendimentos > 0 ? totalGeral / diasComAtendimentos : 0;
+        let estimativaFinal = mediaDiaria * 30; // Considerando um mês com 30 dias
 
-        document.getElementById("contadorGeral").innerText = totalAtendimentos;
+        // Atualiza os contadores no Dashboard
+        document.getElementById("contadorInterno").innerText = totalInterno;
+        document.getElementById("contadorExterno").innerText = totalExterno;
+        document.getElementById("contadorGeral").innerText = totalGeral;
         document.getElementById("contadorMedia").innerText = mediaDiaria.toFixed(1);
-        document.getElementById("contadorEstimativa").innerText = Math.round(estimativaFinalMes);
+        document.getElementById("estimativaMensal").innerText = estimativaFinal.toFixed(0);
     }
 
     function carregarGrafico() {
         let canvas = document.getElementById("myChart");
 
-        // Remove qualquer gráfico existente antes de criar um novo
         if (canvas.chart) {
             canvas.chart.destroy();
         }
@@ -205,44 +207,43 @@
             return;
         }
 
-        // Gera os dias do mês dinamicamente
+        // Gera os últimos 7 dias dinamicamente
         let dias = [];
         let dataAtual = new Date();
         let atendimentosData = [];
-        let totalDiasNoMes = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0).getDate();
 
-        for (let i = 1; i <= totalDiasNoMes; i++) {
-            let data = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), i);
-            let diaFormatado = data.toLocaleDateString("pt-BR", { day: "2-digit" });
+        for (let i = 6; i >= 0; i--) {
+            let data = new Date();
+            data.setDate(dataAtual.getDate() - i);
+            let diaFormatado = data.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
             dias.push(diaFormatado);
 
-            atendimentosData.push(atendimentosPorDia[data.toLocaleDateString("pt-BR")] || 0);
+            let totalDia = atendimentosPorDia[diaFormatado] 
+                ? atendimentosPorDia[diaFormatado].interno + atendimentosPorDia[diaFormatado].externo 
+                : 0;
+            
+            atendimentosData.push(totalDia);
         }
 
         canvas.chart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: dias, // Dias do mês
+                labels: dias,
                 datasets: [{
                     label: "Atendimentos por Dia",
-                    data: atendimentosData, // Dados reais dos atendimentos
+                    data: atendimentosData,
                     backgroundColor: "rgba(0, 123, 255, 0.7)", // Azul claro
                     borderColor: "rgba(0, 86, 179, 1)", // Azul escuro
                     borderWidth: 1,
-                    barThickness: 15 // Barras mais finas e próximas
+                    barThickness: 20 // Barras mais finas e próximas
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: { 
-                        beginAtZero: true,
-                        ticks: { color: "#000" }
-                    },
-                    x: {
-                        ticks: { color: "#000" }
-                    }
+                    y: { beginAtZero: true, ticks: { color: "#000" } },
+                    x: { ticks: { color: "#000" } }
                 },
                 plugins: {
                     legend: { labels: { color: "#000" } }
