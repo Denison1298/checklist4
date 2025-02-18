@@ -15,25 +15,16 @@
     <style>
         .tab-content { display: none; }
         .active { display: block; }
-
-        /* Ajusta o gráfico */
         .chart-container {
             width: 100%;
             max-width: 1200px;
             height: 400px;
             margin: auto;
-            overflow-x: auto; /* Ativa a barra de rolagem horizontal */
-            background-color: #f8f9fa; /* Cor de fundo clara */
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
         }
         #myChart {
-            min-width: 800px; /* Garante que o gráfico possa ser rolado */
+            width: 100%;
             height: 100%;
-            background: #ffffff; /* Fundo branco */
-            border-radius: 8px;
+            background: white; /* Corrige o fundo preto */
         }
     </style>
 </head>
@@ -99,8 +90,8 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="atendimentosBody">
-                        <!-- Linhas de atendimento serão adicionadas aqui pelo JavaScript -->
+                    <tbody>
+                        <!-- Linhas de atendimento serão adicionadas aqui -->
                     </tbody>
                 </table>
             </div>
@@ -114,161 +105,36 @@
 
             <button id="toggleDiasAnteriores" class="btn btn-info mb-4" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
 
-            <!-- Gráfico com rolagem -->
-<div class="chart-container">
-    <canvas id="myChart"></canvas>
-</div>
+            <!-- Gráfico -->
+            <div class="chart-container">
+                <svg id="myChart"></svg>
+            </div>
 
-<!-- Biblioteca Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <!-- Contadores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 text-center">
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Interno: <span id="contadorInterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Externo: <span id="contadorExterno">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Total Geral: <span id="contadorGeral">0</span></div>
+                <div class="bg-gray-700 p-4 rounded shadow-lg">Média Diária: <span id="contadorMedia">0</span></div>
+            </div>
+        </div>
 
-            <!-- Contadores no Dashboard -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 text-center">
-    <div class="bg-gray-700 p-4 rounded shadow-lg">Total Interno: <span id="contadorInterno">0</span></div>
-    <div class="bg-gray-700 p-4 rounded shadow-lg">Total Externo: <span id="contadorExterno">0</span></div>
-    <div class="bg-gray-700 p-4 rounded shadow-lg">Total Geral: <span id="contadorGeral">0</span></div>
-    <div class="bg-gray-700 p-4 rounded shadow-lg">Média Diária: <span id="contadorMedia">0</span></div>
-    <div class="bg-blue-700 p-4 rounded shadow-lg text-white font-bold">Estimativa Mensal: <span id="estimativaMensal">0</span></div>
-</div>
-
- <!-- Rodapé -->
+        <!-- Rodapé -->
         <footer class="text-center mt-10">
             <p class="text-gray-400">Desenvolvido por Denison Santos</p>
         </footer>
     </div>
 
-<!-- Inclusão do script jsPDF e jsPDF autotable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<script src="scripts.js"></script>
-<!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Scripts -->
+    <script src="scripts.js"></script>
 
     <!-- JS para Tabs -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        carregarDados(); // Carrega os dados salvos no Local Storage ao iniciar a página
-        carregarGrafico();
-    });
-
-    // Recupera os atendimentos salvos no Local Storage ou inicializa um objeto vazio
-    let atendimentosPorDia = JSON.parse(localStorage.getItem("atendimentosPorDia")) || {};
-
-    function salvarDados() {
-        localStorage.setItem("atendimentosPorDia", JSON.stringify(atendimentosPorDia));
-    }
-
-    function adicionarAtendimento(tipo) {
-        let dataHoje = new Date().toLocaleDateString("pt-BR");
-
-        if (!atendimentosPorDia[dataHoje]) {
-            atendimentosPorDia[dataHoje] = { interno: 0, externo: 0 };
+    <script>
+        function showTabContent(tabName) {
+            let tabs = document.querySelectorAll(".tab-content");
+            tabs.forEach(tab => tab.classList.remove("active"));
+            document.getElementById(tabName).classList.add("active");
         }
-
-        if (tipo === "interno") {
-            atendimentosPorDia[dataHoje].interno++;
-        } else {
-            atendimentosPorDia[dataHoje].externo++;
-        }
-
-        salvarDados(); // Salva no Local Storage
-        atualizarContadores();
-        carregarGrafico();
-    }
-
-    function atualizarContadores() {
-        let totalInterno = 0;
-        let totalExterno = 0;
-
-        // Calcula os totais com base nos dados salvos
-        for (let dia in atendimentosPorDia) {
-            totalInterno += atendimentosPorDia[dia].interno;
-            totalExterno += atendimentosPorDia[dia].externo;
-        }
-
-        let totalGeral = totalInterno + totalExterno;
-        let diasComAtendimentos = Object.keys(atendimentosPorDia).length;
-        let mediaDiaria = diasComAtendimentos > 0 ? totalGeral / diasComAtendimentos : 0;
-        let estimativaFinal = mediaDiaria * 30; // Considerando um mês com 30 dias
-
-        // Atualiza os contadores no Dashboard
-        document.getElementById("contadorInterno").innerText = totalInterno;
-        document.getElementById("contadorExterno").innerText = totalExterno;
-        document.getElementById("contadorGeral").innerText = totalGeral;
-        document.getElementById("contadorMedia").innerText = mediaDiaria.toFixed(1);
-        document.getElementById("estimativaMensal").innerText = estimativaFinal.toFixed(0);
-    }
-
-    function carregarGrafico() {
-        let canvas = document.getElementById("myChart");
-
-        if (canvas.chart) {
-            canvas.chart.destroy();
-        }
-
-        let ctx = canvas.getContext("2d");
-
-        if (!ctx) {
-            console.error("Erro: O elemento 'myChart' não foi encontrado.");
-            return;
-        }
-
-        // Gera os últimos 7 dias dinamicamente
-        let dias = [];
-        let dataAtual = new Date();
-        let atendimentosData = [];
-
-        for (let i = 6; i >= 0; i--) {
-            let data = new Date();
-            data.setDate(dataAtual.getDate() - i);
-            let diaFormatado = data.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
-            dias.push(diaFormatado);
-
-            let totalDia = atendimentosPorDia[diaFormatado] 
-                ? atendimentosPorDia[diaFormatado].interno + atendimentosPorDia[diaFormatado].externo 
-                : 0;
-            
-            atendimentosData.push(totalDia);
-        }
-
-        canvas.chart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: dias,
-                datasets: [{
-                    label: "Atendimentos por Dia",
-                    data: atendimentosData,
-                    backgroundColor: "rgba(0, 123, 255, 0.7)", // Azul claro
-                    borderColor: "rgba(0, 86, 179, 1)", // Azul escuro
-                    borderWidth: 1,
-                    barThickness: 20 // Barras mais finas e próximas
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, ticks: { color: "#000" } },
-                    x: { ticks: { color: "#000" } }
-                },
-                plugins: {
-                    legend: { labels: { color: "#000" } }
-                }
-            }
-        });
-
-        canvas.style.backgroundColor = "#ffffff";
-    }
-
-    function carregarDados() {
-        atualizarContadores();
-        carregarGrafico();
-    }
-
-    // Função chamada ao clicar no botão de adicionar atendimento
-    function enviarProtocolo(tipo) {
-        adicionarAtendimento(tipo);
-    }
-</script>
+    </script>
 </body>
 </html>
