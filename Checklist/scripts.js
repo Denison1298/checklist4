@@ -2,8 +2,10 @@ let atendimentos = JSON.parse(localStorage.getItem('atendimentos')) || [];
 let currentPage = 1;
 const itemsPerPage = 10;
 let showAll = false;
-let mostrarTodosDias = false; // Inicialmente, usa filtro de dias
-let diasSelecionados = getUltimosQuatroDias(); // Últimos 4 dias por padrão
+let mostrarTodosDiasAtendimentos = false; // Para a aba Atendimentos Mensais
+let diasSelecionadosAtendimentos = getUltimosQuatroDias(); // Últimos 4 dias por padrão
+let mostrarTodosDiasDashboard = false; // Para a aba Dashboard
+let diasSelecionadosDashboard = getUltimosQuatroDias(); // Últimos 4 dias por padrão
 
 // Função para obter os últimos 4 dias do mês atual
 function getUltimosQuatroDias() {
@@ -17,19 +19,17 @@ function getUltimosQuatroDias() {
     return dias;
 }
 
-// Função para renderizar a tabela com paginação
+// Função para renderizar a tabela com paginação e filtro de dias
 function renderAtendimentosTable() {
     const tableBody = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
-    // Aplicar filtro de atendimentos anteriores, se ativo
+    // Filtrar atendimentos por dias selecionados
     let filteredAtendimentos = atendimentos;
-    const botao = document.getElementById('toggleAtendimentosAnteriores');
-    const ocultar = botao.innerText.includes('Ocultar');
-    if (ocultar) {
+    if (!mostrarTodosDiasAtendimentos && diasSelecionadosAtendimentos.length > 0) {
         filteredAtendimentos = atendimentos.filter(atendimento => {
             const dataAtendimento = atendimento.dataHora.split(' ')[0];
-            return ehHoje(dataAtendimento);
+            return diasSelecionadosAtendimentos.includes(dataAtendimento);
         });
     }
 
@@ -87,13 +87,11 @@ function previousPage() {
 
 // Função para navegar para a próxima página
 function nextPage() {
-    const botao = document.getElementById('toggleAtendimentosAnteriores');
-    const ocultar = botao.innerText.includes('Ocultar');
     let filteredAtendimentos = atendimentos;
-    if (ocultar) {
+    if (!mostrarTodosDiasAtendimentos && diasSelecionadosAtendimentos.length > 0) {
         filteredAtendimentos = atendimentos.filter(atendimento => {
             const dataAtendimento = atendimento.dataHora.split(' ')[0];
-            return ehHoje(dataAtendimento);
+            return diasSelecionadosAtendimentos.includes(dataAtendimento);
         });
     }
     const totalPages = Math.ceil(filteredAtendimentos.length / itemsPerPage);
@@ -110,26 +108,52 @@ function toggleMostrarTodos() {
     renderAtendimentosTable();
 }
 
-// Função para filtrar por data selecionada no calendário
-function filtrarPorData() {
-    const filtroData = document.getElementById('filtroData').value;
+// Função para filtrar por data na aba Atendimentos Mensais
+function filtrarPorDataAtendimentos() {
+    const filtroData = document.getElementById('filtroDataAtendimentos').value;
     if (filtroData) {
         const [ano, mes, dia] = filtroData.split('-');
         const dataFormatada = `${dia}/${mes}`;
-        diasSelecionados = [dataFormatada];
-        document.getElementById('mostrarTodosDias').checked = false;
-        mostrarTodosDias = false;
+        diasSelecionadosAtendimentos = [dataFormatada];
+        document.getElementById('mostrarTodosDiasAtendimentos').checked = false;
+        mostrarTodosDiasAtendimentos = false;
+        currentPage = 1; // Resetar página
+        renderAtendimentosTable();
+    }
+}
+
+// Função para alternar entre mostrar todos os dias ou dias selecionados na aba Atendimentos Mensais
+function toggleMostrarTodosDiasAtendimentos() {
+    mostrarTodosDiasAtendimentos = document.getElementById('mostrarTodosDiasAtendimentos').checked;
+    if (mostrarTodosDiasAtendimentos) {
+        diasSelecionadosAtendimentos = []; // Limpa filtro de dias
+    } else {
+        diasSelecionadosAtendimentos = getUltimosQuatroDias(); // Volta para os últimos 4 dias
+    }
+    currentPage = 1; // Resetar página
+    renderAtendimentosTable();
+}
+
+// Função para filtrar por data na aba Dashboard
+function filtrarPorDataDashboard() {
+    const filtroData = document.getElementById('filtroDataDashboard').value;
+    if (filtroData) {
+        const [ano, mes, dia] = filtroData.split('-');
+        const dataFormatada = `${dia}/${mes}`;
+        diasSelecionadosDashboard = [dataFormatada];
+        document.getElementById('mostrarTodosDiasDashboard').checked = false;
+        mostrarTodosDiasDashboard = false;
         atualizarGrafico();
     }
 }
 
-// Função para alternar entre mostrar todos os dias ou dias selecionados
-function toggleMostrarTodosDias() {
-    mostrarTodosDias = document.getElementById('mostrarTodosDias').checked;
-    if (mostrarTodosDias) {
-        diasSelecionados = []; // Limpa filtro de dias
+// Função para alternar entre mostrar todos os dias ou dias selecionados na aba Dashboard
+function toggleMostrarTodosDiasDashboard() {
+    mostrarTodosDiasDashboard = document.getElementById('mostrarTodosDiasDashboard').checked;
+    if (mostrarTodosDiasDashboard) {
+        diasSelecionadosDashboard = []; // Limpa filtro de dias
     } else {
-        diasSelecionados = getUltimosQuatroDias(); // Volta para os últimos 4 dias
+        diasSelecionadosDashboard = getUltimosQuatroDias(); // Volta para os últimos 4 dias
     }
     atualizarGrafico();
 }
@@ -146,9 +170,12 @@ function limparAtendimentos() {
         currentPage = 1;
         document.getElementById('mostrarTodos').checked = false;
         showAll = false;
-        diasSelecionados = getUltimosQuatroDias();
-        document.getElementById('mostrarTodosDias').checked = false;
-        mostrarTodosDias = false;
+        diasSelecionadosAtendimentos = getUltimosQuatroDias();
+        document.getElementById('mostrarTodosDiasAtendimentos').checked = false;
+        mostrarTodosDiasAtendimentos = false;
+        diasSelecionadosDashboard = getUltimosQuatroDias();
+        document.getElementById('mostrarTodosDiasDashboard').checked = false;
+        mostrarTodosDiasDashboard = false;
     }
 }
 
@@ -187,41 +214,32 @@ window.onload = function() {
     atualizarGrafico();
     atualizarContadores();
 
-    // Restaurar o estado do botão de exibição/ocultação dos atendimentos anteriores
-    restaurarEstadoBotaoAtendimentos();
-
-    // Configurar o input de data para limitar ao mês atual
+    // Configurar os inputs de data para limitar ao mês atual
     const hoje = new Date();
     const primeiroDia = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     const ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
-    const filtroData = document.getElementById('filtroData');
-    if (filtroData) {
-        filtroData.min = `${primeiroDia.getFullYear()}-${(primeiroDia.getMonth() + 1).toString().padStart(2, '0')}-01`;
-        filtroData.max = `${ultimoDia.getFullYear()}-${(ultimoDia.getMonth() + 1).toString().padStart(2, '0')}-${ultimoDia.getDate().toString().padStart(2, '0')}`;
+    
+    const filtroDataAtendimentos = document.getElementById('filtroDataAtendimentos');
+    if (filtroDataAtendimentos) {
+        filtroDataAtendimentos.min = `${primeiroDia.getFullYear()}-${(primeiroDia.getMonth() + 1).toString().padStart(2, '0')}-01`;
+        filtroDataAtendimentos.max = `${ultimoDia.getFullYear()}-${(ultimoDia.getMonth() + 1).toString().padStart(2, '0')}-${ultimoDia.getDate().toString().padStart(2, '0')}`;
     }
 
-    // Restaurar o estado do checkbox de mostrar todos os dias
-    const mostrarTodosDiasCheckbox = document.getElementById('mostrarTodosDias');
-    if (mostrarTodosDiasCheckbox) {
-        mostrarTodosDiasCheckbox.checked = mostrarTodosDias;
+    const filtroDataDashboard = document.getElementById('filtroDataDashboard');
+    if (filtroDataDashboard) {
+        filtroDataDashboard.min = `${primeiroDia.getFullYear()}-${(primeiroDia.getMonth() + 1).toString().padStart(2, '0')}-01`;
+        filtroDataDashboard.max = `${ultimoDia.getFullYear()}-${(ultimoDia.getMonth() + 1).toString().padStart(2, '0')}-${ultimoDia.getDate().toString().padStart(2, '0')}`;
     }
-}
 
-// Função para alternar a exibição dos atendimentos anteriores
-function toggleAtendimentosAnteriores() {
-    var botao = document.getElementById('toggleAtendimentosAnteriores');
-    var ocultar = botao.innerText.includes('Ocultar');
-    botao.innerText = ocultar ? 'Exibir Atendimentos Anteriores' : 'Ocultar Atendimentos Anteriores';
-    localStorage.setItem('botaoOcultarAtendimentos', ocultar ? 'exibir' : 'ocultar');
-    currentPage = 1; // Resetar página ao mudar filtro
-    renderAtendimentosTable();
-}
+    // Restaurar o estado dos checkboxes
+    const mostrarTodosDiasAtendimentosCheckbox = document.getElementById('mostrarTodosDiasAtendimentos');
+    if (mostrarTodosDiasAtendimentosCheckbox) {
+        mostrarTodosDiasAtendimentosCheckbox.checked = mostrarTodosDiasAtendimentos;
+    }
 
-// Função para restaurar o estado do botão de exibição/ocultação ao carregar a página
-function restaurarEstadoBotaoAtendimentos() {
-    var estadoBotao = localStorage.getItem('botaoOcultarAtendimentos');
-    if (estadoBotao === 'exibir') {
-        toggleAtendimentosAnteriores();
+    const mostrarTodosDiasDashboardCheckbox = document.getElementById('mostrarTodosDiasDashboard');
+    if (mostrarTodosDiasDashboardCheckbox) {
+        mostrarTodosDiasDashboardCheckbox.checked = mostrarTodosDiasDashboard;
     }
 }
 
@@ -305,7 +323,7 @@ function atualizarGrafico() {
         var dataFormatada = formatarData(dataHora);
 
         // Filtrar por dias selecionados, se não mostrar todos os dias
-        if (!mostrarTodosDias && diasSelecionados.length > 0 && !diasSelecionados.includes(dataFormatada)) {
+        if (!mostrarTodosDiasDashboard && diasSelecionadosDashboard.length > 0 && !diasSelecionadosDashboard.includes(dataFormatada)) {
             continue;
         }
 
@@ -364,7 +382,7 @@ function atualizarGrafico() {
     eixoX.setAttribute('x1', 0);
     eixoX.setAttribute('y1', alturaMaxima);
     eixoX.setAttribute('x2', x);
-    eixoX.setAttribute('x2', x);
+    eixoX.setAttribute('y2', alturaMaxima);
     eixoX.setAttribute('class', 'axis');
     svg.appendChild(eixoX);
 
@@ -464,13 +482,4 @@ function gerarRelatorioPDF() {
 
     // Baixar o PDF
     doc.save('Relatorio_Atendimentos_Mensais.pdf');
-}
-
-// Função para alternar a exibição dos dias anteriores no gráfico
-function toggleDiasAnteriores() {
-    var botao = document.getElementById('toggleDiasAnteriores');
-    var ocultar = botao.innerText.includes('Ocultar');
-    botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
-    // A função toggleDiasAnteriores agora respeita o filtro de dias selecionados
-    atualizarGrafico();
 }
