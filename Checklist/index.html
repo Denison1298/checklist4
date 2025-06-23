@@ -62,9 +62,9 @@
         <div class="pagination" id="paginationControls" style="margin-top: 10px; text-align: center;">
             <button class="btn" onclick="previousPage()" id="prevPage" disabled>Anterior</button>
             <span id="pageInfo">Página 1 de 1</span>
-            <button class="btn" onclick="nextPage()" id="nextPage" disabled>Próximo</button>
+            <button class="btn" onclick="nextPage()" id="nextPage">Próximo</button>
         </div>
-        <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
+        <button class="btn" onclick="gerarRelatorioPDF()">Dados</button>
     </div>
 
     <div id="dashboard" class="tab-content">
@@ -72,6 +72,10 @@
         <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
         <div style="margin-top: 10px;">
             <label>
+                <input type="date" id="filtroData" onchange="filtrarPorData()">
+                Selecionar dia do mês
+            </label>
+            <label style="margin-left: 20px;">
                 <input type="checkbox" id="mostrarTodosDias" onchange="toggleMostrarTodosDias()"> Mostrar todos os dias
             </label>
         </div>
