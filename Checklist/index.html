@@ -70,6 +70,11 @@
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
         <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
+        <div style="margin-top: 10px;">
+            <label>
+                <input type="checkbox" id="mostrarTodosDias" onchange="toggleMostrarTodosDias()"> Mostrar todos os dias
+            </label>
+        </div>
         <div class="chart-container">
             <svg id="myChart" width="1600" height="400"></svg>
         </div>
