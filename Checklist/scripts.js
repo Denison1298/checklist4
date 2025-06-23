@@ -2,6 +2,20 @@ let atendimentos = JSON.parse(localStorage.getItem('atendimentos')) || [];
 let currentPage = 1;
 const itemsPerPage = 10;
 let showAll = false;
+let mostrarTodosDias = false; // Inicialmente, usa filtro de dias
+let diasSelecionados = getUltimosQuatroDias(); // Últimos 4 dias por padrão
+
+// Função para obter os últimos 4 dias do mês atual
+function getUltimosQuatroDias() {
+    const hoje = new Date();
+    const dias = [];
+    for (let i = 3; i >= 0; i--) {
+        const data = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - i);
+        const dataFormatada = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth() + 1).toString().padStart(2, '0')}`;
+        dias.push(dataFormatada);
+    }
+    return dias;
+}
 
 // Função para renderizar a tabela com paginação
 function renderAtendimentosTable() {
@@ -96,6 +110,30 @@ function toggleMostrarTodos() {
     renderAtendimentosTable();
 }
 
+// Função para filtrar por data selecionada no calendário
+function filtrarPorData() {
+    const filtroData = document.getElementById('filtroData').value;
+    if (filtroData) {
+        const [ano, mes, dia] = filtroData.split('-');
+        const dataFormatada = `${dia}/${mes}`;
+        diasSelecionados = [dataFormatada];
+        document.getElementById('mostrarTodosDias').checked = false;
+        mostrarTodosDias = false;
+        atualizarGrafico();
+    }
+}
+
+// Função para alternar entre mostrar todos os dias ou dias selecionados
+function toggleMostrarTodosDias() {
+    mostrarTodosDias = document.getElementById('mostrarTodosDias').checked;
+    if (mostrarTodosDias) {
+        diasSelecionados = []; // Limpa filtro de dias
+    } else {
+        diasSelecionados = getUltimosQuatroDias(); // Volta para os últimos 4 dias
+    }
+    atualizarGrafico();
+}
+
 // Função para limpar a lista de atendimentos
 function limparAtendimentos() {
     if (confirm('Tem certeza que deseja limpar todos os atendimentos? Esta ação não pode ser desfeita.')) {
@@ -108,6 +146,9 @@ function limparAtendimentos() {
         currentPage = 1;
         document.getElementById('mostrarTodos').checked = false;
         showAll = false;
+        diasSelecionados = getUltimosQuatroDias();
+        document.getElementById('mostrarTodosDias').checked = false;
+        mostrarTodosDias = false;
     }
 }
 
@@ -121,6 +162,8 @@ function showTabContent(tabId) {
     localStorage.setItem('activeTab', tabId); // Salvar a aba ativa
     if (tabId === 'atendimentos') {
         renderAtendimentosTable(); // Atualizar tabela ao mudar para a aba Atendimentos
+    } else if (tabId === 'dashboard') {
+        atualizarGrafico(); // Atualizar gráfico ao mudar para a aba Dashboard
     }
 }
 
@@ -146,6 +189,22 @@ window.onload = function() {
 
     // Restaurar o estado do botão de exibição/ocultação dos atendimentos anteriores
     restaurarEstadoBotaoAtendimentos();
+
+    // Configurar o input de data para limitar ao mês atual
+    const hoje = new Date();
+    const primeiroDia = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+    const filtroData = document.getElementById('filtroData');
+    if (filtroData) {
+        filtroData.min = `${primeiroDia.getFullYear()}-${(primeiroDia.getMonth() + 1).toString().padStart(2, '0')}-01`;
+        filtroData.max = `${ultimoDia.getFullYear()}-${(ultimoDia.getMonth() + 1).toString().padStart(2, '0')}-${ultimoDia.getDate().toString().padStart(2, '0')}`;
+    }
+
+    // Restaurar o estado do checkbox de mostrar todos os dias
+    const mostrarTodosDiasCheckbox = document.getElementById('mostrarTodosDias');
+    if (mostrarTodosDiasCheckbox) {
+        mostrarTodosDiasCheckbox.checked = mostrarTodosDias;
+    }
 }
 
 // Função para alternar a exibição dos atendimentos anteriores
@@ -237,17 +296,18 @@ function mostrarMensagemSucesso(mensagem) {
     }, 3000);
 }
 
-// Função para atualizar o gráfico com a opção de ocultar dias anteriores
-function atualizarGrafico(ocultarDiasAnteriores = false) {
+// Função para atualizar o gráfico com filtro de dias
+function atualizarGrafico() {
     var datas = {};
 
     for (var i = 0; i < atendimentos.length; i++) {
         var dataHora = atendimentos[i].dataHora.split(' ')[0];
-        if (ocultarDiasAnteriores && !ehHoje(dataHora)) {
-            continue; // Pula os dias anteriores se a opção estiver ativa
-        }
-
         var dataFormatada = formatarData(dataHora);
+
+        // Filtrar por dias selecionados, se não mostrar todos os dias
+        if (!mostrarTodosDias && diasSelecionados.length > 0 && !diasSelecionados.includes(dataFormatada)) {
+            continue;
+        }
 
         if (!datas[dataFormatada]) {
             datas[dataFormatada] = 0;
@@ -264,7 +324,7 @@ function atualizarGrafico(ocultarDiasAnteriores = false) {
     var alturaMaxima = 300;
     var x = 0;
 
-    Object.keys(datas).forEach(function(data) {
+    Object.keys(datas).sort().forEach(function(data) {
         var altura = datas[data] * (alturaMaxima / Math.max(...Object.values(datas), 1));
         var y = alturaMaxima - altura;
 
@@ -304,7 +364,7 @@ function atualizarGrafico(ocultarDiasAnteriores = false) {
     eixoX.setAttribute('x1', 0);
     eixoX.setAttribute('y1', alturaMaxima);
     eixoX.setAttribute('x2', x);
-    eixoX.setAttribute('y2', alturaMaxima);
+    eixoX.setAttribute('x2', x);
     eixoX.setAttribute('class', 'axis');
     svg.appendChild(eixoX);
 
@@ -410,7 +470,7 @@ function gerarRelatorioPDF() {
 function toggleDiasAnteriores() {
     var botao = document.getElementById('toggleDiasAnteriores');
     var ocultar = botao.innerText.includes('Ocultar');
-
-    atualizarGrafico(ocultar);
     botao.innerText = ocultar ? 'Exibir Dias Anteriores' : 'Ocultar Dias Anteriores';
+    // A função toggleDiasAnteriores agora respeita o filtro de dias selecionados
+    atualizarGrafico();
 }
