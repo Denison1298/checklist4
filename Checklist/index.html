@@ -24,39 +24,28 @@
 
     <div id="checklist" class="tab-content active">
         <h2>Checklist de Atendimentos</h2>
-
-        <!-- Atendimento Interno -->
         <h3>Atendimento Interno</h3>
-        
-        <!-- Campo e botão para enviar Atendimento Interno -->
         <div>
             <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
             <button class="btn" onclick="enviarProtocolo('interno')">Enviar Atendimento Interno</button>
         </div>
-
-        <!-- Atendimento Externo -->
         <h3>Atendimento Externo</h3>
-
-        <!-- Campo e botão para enviar Atendimento Externo -->
         <div>
             <input type="text" id="protocoloExterno" placeholder="Digite o protocolo do Atendimento Externo">
             <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
         </div>
-
-        <!-- Mensagem de sucesso -->
         <div id="successMessage" class="success-message"></div>
     </div>
 
     <div id="atendimentos" class="tab-content">
         <h2>Lista de Atendimentos</h2>
-
-        <!-- Botão para exibir/ocultar atendimentos do dia anterior -->
         <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
-
-        <!-- Botão para limpar lista de atendimentos -->
         <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
-        
-        <!-- Tabela de atendimentos -->
+        <div style="margin-top: 10px;">
+            <label>
+                <input type="checkbox" id="mostrarTodos" onchange="toggleMostrarTodos()"> Mostrar todos os atendimentos
+            </label>
+        </div>
         <table id="atendimentosTable">
             <thead>
                 <tr>
@@ -70,36 +59,32 @@
                 <!-- Linhas de atendimento serão adicionadas aqui -->
             </tbody>
         </table>
-        
-        <!-- Botão para gerar relatório em PDF -->
+        <div class="pagination" id="paginationControls" style="margin-top: 10px; text-align: center;">
+            <button class="btn" onclick="previousPage()" id="prevPage" disabled>Anterior</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button class="btn" onclick="nextPage()" id="nextPage" disabled>Próximo</button>
+        </div>
         <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
-
-        <!-- Botão para ocultar/exibir dias anteriores no gráfico -->
         <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
-
         <div class="chart-container">
             <svg id="myChart" width="1600" height="400"></svg>
         </div>
-
-        <!-- Contadores de atendimentos -->
         <div id="contadorInterno" class="contador-item">Total Interno: 0</div>
         <div id="contadorExterno" class="contador-item">Total Externo: 0</div>
         <div id="contadorGeral" class="contador-item">Total Geral: 0</div>
         <div id="contadorMedia" class="contador-item">Média de Atendimentos Diários: 0</div>
     </div>
 
-<!-- Texto de crédito -->
-<div style="text-align: center; margin-top: 10px;">
-    <p>Desenvolvido por Denison Santos</p>
-</div>
+    <div style="text-align: center; margin-top: 10px;">
+        <p>Desenvolvido por Denison Santos</p>
+    </div>
 
-<!-- Inclusão do script jsPDF e jsPDF autotable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
