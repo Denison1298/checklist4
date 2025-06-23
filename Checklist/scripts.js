@@ -8,11 +8,10 @@ function renderAtendimentosTable() {
     const tableBody = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
-    let filteredAtendimentos = atendimentos;
     // Aplicar filtro de atendimentos anteriores, se ativo
+    let filteredAtendimentos = atendimentos;
     const botao = document.getElementById('toggleAtendimentosAnteriores');
     const ocultar = botao.innerText.includes('Ocultar');
-
     if (ocultar) {
         filteredAtendimentos = atendimentos.filter(atendimento => {
             const dataAtendimento = atendimento.dataHora.split(' ')[0];
@@ -20,15 +19,17 @@ function renderAtendimentosTable() {
         });
     }
 
+    // Determinar quais atendimentos exibir com base na paginação
     let dataToShow = filteredAtendimentos;
     let startIndex = 0;
     if (!showAll) {
         startIndex = (currentPage - 1) * itemsPerPage;
-        const end = startIndex + itemsPerPage;
+        const end = Math.min(startIndex + itemsPerPage, filteredAtendimentos.length);
         dataToShow = filteredAtendimentos.slice(startIndex, end);
     }
 
-    dataToShow.forEach((atendimento, localIndex) => {
+    // Renderizar linhas da tabela
+    dataToShow.forEach((atendimento) => {
         const globalIndex = atendimentos.indexOf(atendimento); // Índice global para remoção
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -40,6 +41,7 @@ function renderAtendimentosTable() {
         tableBody.appendChild(row);
     });
 
+    // Atualizar controles de paginação
     updatePaginationControls(filteredAtendimentos.length);
 }
 
@@ -71,7 +73,16 @@ function previousPage() {
 
 // Função para navegar para a próxima página
 function nextPage() {
-    const totalPages = Math.ceil(atendimentos.length / itemsPerPage);
+    const botao = document.getElementById('toggleAtendimentosAnteriores');
+    const ocultar = botao.innerText.includes('Ocultar');
+    let filteredAtendimentos = atendimentos;
+    if (ocultar) {
+        filteredAtendimentos = atendimentos.filter(atendimento => {
+            const dataAtendimento = atendimento.dataHora.split(' ')[0];
+            return ehHoje(dataAtendimento);
+        });
+    }
+    const totalPages = Math.ceil(filteredAtendimentos.length / itemsPerPage);
     if (currentPage < totalPages) {
         currentPage++;
         renderAtendimentosTable();
