@@ -39,8 +39,16 @@
 
     <div id="atendimentos" class="tab-content">
         <h2>Lista de Atendimentos</h2>
-        <button id="toggleAtendimentosAnteriores" class="btn" onclick="toggleAtendimentosAnteriores()">Ocultar Atendimentos Anteriores</button>
         <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
+        <div class="filter-controls" style="margin-top: 10px;">
+            <label>
+                <input type="date" id="filtroDataAtendimentos" onchange="filtrarPorDataAtendimentos()">
+                Selecionar dia do mês
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="checkbox" id="mostrarTodosDiasAtendimentos" onchange="toggleMostrarTodosDiasAtendimentos()"> Mostrar todos os dias
+            </label>
+        </div>
         <div style="margin-top: 10px;">
             <label>
                 <input type="checkbox" id="mostrarTodos" onchange="toggleMostrarTodos()"> Mostrar todos os atendimentos
@@ -62,21 +70,20 @@
         <div class="pagination" id="paginationControls" style="margin-top: 10px; text-align: center;">
             <button class="btn" onclick="previousPage()" id="prevPage" disabled>Anterior</button>
             <span id="pageInfo">Página 1 de 1</span>
-            <button class="btn" onclick="nextPage()" id="nextPage">Próximo</button>
+            <button class="btn" onclick="nextPage()" id="nextPage" disabled>Próximo</button>
         </div>
-        <button class="btn" onclick="gerarRelatorioPDF()">Dados</button>
+        <button class="btn" onclick="gerarRelatorioPDF()">Gerar Relatório Mensal em PDF</button>
     </div>
 
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
-        <button id="toggleDiasAnteriores" class="btn" onclick="toggleDiasAnteriores()">Ocultar Dias Anteriores</button>
-        <div style="margin-top: 10px;">
+        <div class="filter-controls" style="margin-top: 10px;">
             <label>
-                <input type="date" id="filtroData" onchange="filtrarPorData()">
+                <input type="date" id="filtroDataDashboard" onchange="filtrarPorDataDashboard()">
                 Selecionar dia do mês
             </label>
             <label style="margin-left: 20px;">
-                <input type="checkbox" id="mostrarTodosDias" onchange="toggleMostrarTodosDias()"> Mostrar todos os dias
+                <input type="checkbox" id="mostrarTodosDiasDashboard" onchange="toggleMostrarTodosDiasDashboard()"> Mostrar todos os dias
             </label>
         </div>
         <div class="chart-container">
