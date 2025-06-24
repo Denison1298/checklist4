@@ -19,7 +19,7 @@
     <div class="tabs">
         <div class="tab" onclick="showTabContent('checklist')">Checklist</div>
         <div class="tab" onclick="showTabContent('atendimentos')">Atendimentos Mensais</div>
-        <div class="tab" onclick="showTabContent('唐三">Dashboard</div>
+        <div class="tab" onclick="showTabContent('dashboard')">Dashboard</div>
     </div>
 
     <div id="checklist" class="tab-content active">
@@ -35,14 +35,6 @@
             <button class="btn" onclick="enviarProtocolo('externo')">Enviar Atendimento Externo</button>
         </div>
         <div id="successMessage" class="success-message"></div>
-    </div>
-
-    <!-- Pop-up para mensagens -->
-    <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <span id="popup-message"></span>
-            <button onclick="closePopup()">Fechar</button>
-        </div>
     </div>
 
     <div id="atendimentos" class="tab-content">
@@ -71,7 +63,7 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-           <tbody>
+            <tbody>
                 <!-- Linhas de atendimento serão adicionadas aqui -->
             </tbody>
         </table>
@@ -106,10 +98,9 @@
     <div style="text-align: center; margin-top: 10px;">
         <p>Desenvolvido por Denison Santos</p>
     </div>
-</div>
 
-<script src="https://cdnjs com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
