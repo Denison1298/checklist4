@@ -495,7 +495,6 @@ function showPopup(message, duration = 3000) {
     popup.innerText = message;
     popup.style.display = "block";
 
-    // Oculta após o tempo especificado
     setTimeout(() => {
         popup.style.display = "none";
         popup.innerText = "";
@@ -547,7 +546,7 @@ function showGoalMessage() {
 // Função para verificar mensagem de fim de expediente
 function checkEndOfDayMessage() {
     const now = new Date();
-    const time = now.toTimeString().slice(0, 5); // Formato HH:MM
+    const time = now.toTimeString().slice(0, 5);
     const isSaturday = now.getDay() === 6;
 
     if (time === HORARIO_ALERTA) {
@@ -573,15 +572,112 @@ function enviarProtocolo(tipo) {
         localStorage.setItem("atendimentos", JSON.stringify(atendimentos));
         protocoloInput.value = "";
         showGoalMessage();
-        // Chame aqui a função que atualiza a tabela, se existir
-        // Exemplo: atualizarTabelaAtendimentos();
     } else {
         showPopup("Por favor, digite um protocolo válido.", 3000);
     }
 }
 
+// Função para desenhar o relógio analógico
+function drawClock() {
+    const canvas = document.getElementById("clockCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const radius = canvas.width / 2;
+    ctx.translate(radius, radius);
+    const now = new Date();
+
+    // Fundo
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.9, 0, 2 * Math.PI);
+    ctx.fillStyle = "#333";
+    ctx.fill();
+    ctx.strokeStyle = "#4CAF50";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Marcadores de hora
+    ctx.strokeStyle = "#4CAF50";
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 12; i++) {
+        const angle = (i * 30) * Math.PI / 180;
+        ctx.beginPath();
+        ctx.moveTo(0, -radius * 0.85);
+        ctx.lineTo(0, -radius * 0.75);
+        ctx.stroke();
+        ctx.rotate(Math.PI / 6);
+    }
+
+    // Ponteiros
+    const hours = now.getHours() % 12;
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    // Ponteiro de horas
+    ctx.save();
+    ctx.rotate((hours * 30 + minutes / 2) * Math.PI / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -radius * 0.5);
+    ctx.strokeStyle = "#4CAF50";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+
+    // Ponteiro de minutos
+    ctx.save();
+    ctx.rotate(minutes * 6 * Math.PI / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -radius * 0.7);
+    ctx.strokeStyle = "#4CAF50";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    // Ponteiro de segundos
+    ctx.save();
+    ctx.rotate(seconds * 6 * Math.PI / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -radius * 0.8);
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+// Função para atualizar o relógio digital e o contador
+function updateClock() {
+    const now = new Date();
+    const digitalClock = document.getElementById("digitalClock");
+    const shiftCountdown = document.getElementById("shiftCountdown");
+
+    // Relógio digital
+    const time = now.toTimeString().slice(0, 5);
+    digitalClock.innerText = `Horário: ${time}`;
+
+    // Contador regressivo até 16:20
+    const today = now.toDateString();
+    const endTime = new Date(`${today} 16:20:00`);
+    const timeDiff = endTime - now;
+
+    if (timeDiff > 0) {
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        shiftCountdown.innerText = `Fim do turno: ${hours}h ${minutes}m`;
+    } else {
+        shiftCountdown.innerText = "Turno encerrado";
+    }
+
+    drawClock();
+}
+
 // Inicialização
 document.addEventListener("DOMContentLoaded", () => {
     checkFirstOpenToday();
-    setInterval(checkEndOfDayMessage, 60000); // Verifica a cada minuto
+    setInterval(checkEndOfDayMessage, 60000);
+    setInterval(updateClock, 1000);
+    updateClock();
 });
