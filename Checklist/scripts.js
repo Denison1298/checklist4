@@ -483,3 +483,15 @@ function gerarRelatorioPDF() {
     // Baixar o PDF
     doc.save('Relatorio_Atendimentos_Mensais.pdf');
 }
+
+function showPopup(message, duration = 3000) {
+    const successMessage = document.getElementById("successMessage");
+    successMessage.innerText = message;
+    successMessage.style.display = "block";
+
+    // Oculta após o tempo especificado
+    setTimeout(() => {
+        successMessage.style.display = "none";
+        successMessage.innerText = "";
+    }, duration);
+}
