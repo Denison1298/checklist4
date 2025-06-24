@@ -6,6 +6,23 @@
     <title>Checklist e Atendimentos</title>
     <link rel="icon" href="https://github.com/Denison1298/checklist4/blob/main/Checklist/img/icon.png?raw=true" type="image/png">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #popupMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            font-size: 16px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -24,11 +41,6 @@
 
     <div id="checklist" class="tab-content active">
         <h2>Checklist de Atendimentos</h2>
-        <div id="clockContainer">
-            <canvas id="clockCanvas" width="60" height="60"></canvas>
-            <div id="digitalClock"></div>
-            <div id="shiftCountdown">Fim do turno: --:--</div>
-        </div>
         <h3>Atendimento Interno</h3>
         <div>
             <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
@@ -44,17 +56,17 @@
 
     <div id="atendimentos" class="tab-content">
         <h2>Lista de Atendimentos</h2>
-        <button id="limparAtendimentos" class="btn btn-danger" onclick="limparAtendimentos()">Limpar Atendimentos</button>
-        <div class="filter-controls">
+        <button id="limparAtendimentos" class="btn" onclick="limparAtendimentos()">Limpar Atendimentos</button>
+        <div class="filter-controls" style="margin-top: 10px;">
             <label>
                 <input type="date" id="filtroDataAtendimentos" onchange="filtrarPorDataAtendimentos()">
                 Selecionar dia do mês
             </label>
-            <label>
+            <label style="margin-left: 20px;">
                 <input type="checkbox" id="mostrarTodosDiasAtendimentos" onchange="toggleMostrarTodosDiasAtendimentos()"> Mostrar todos os dias
             </label>
         </div>
-        <div class="filter-controls">
+        <div style="margin-top: 10px;">
             <label>
                 <input type="checkbox" id="mostrarTodos" onchange="toggleMostrarTodos()"> Mostrar todos os atendimentos
             </label>
@@ -72,7 +84,7 @@
                 <!-- Linhas de atendimento serão adicionadas aqui -->
             </tbody>
         </table>
-        <div class="pagination" id="paginationControls">
+        <div class="pagination" id="paginationControls" style="margin-top: 10px; text-align: center;">
             <button class="btn" onclick="previousPage()" id="prevPage" disabled>Anterior</button>
             <span id="pageInfo">Página 1 de 1</span>
             <button class="btn" onclick="nextPage()" id="nextPage" disabled>Próximo</button>
@@ -82,12 +94,12 @@
 
     <div id="dashboard" class="tab-content">
         <h2>Dashboard</h2>
-        <div class="filter-controls">
+        <div class="filter-controls" style="margin-top: 10px;">
             <label>
                 <input type="date" id="filtroDataDashboard" onchange="filtrarPorDataDashboard()">
                 Selecionar dia do mês
             </label>
-            <label>
+            <label style="margin-left: 20px;">
                 <input type="checkbox" id="mostrarTodosDiasDashboard" onchange="toggleMostrarTodosDiasDashboard()"> Mostrar todos os dias
             </label>
         </div>
@@ -104,6 +116,7 @@
         <p>Desenvolvido por Denison Santos</p>
     </div>
 
+    <!-- Popup para mensagens -->
     <div id="popupMessage"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
