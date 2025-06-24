@@ -2,10 +2,85 @@ let atendimentos = JSON.parse(localStorage.getItem('atendimentos')) || [];
 let currentPage = 1;
 const itemsPerPage = 10;
 let showAll = false;
-let mostrarTodosDiasAtendimentos = false; // Para a aba Atendimentos Mensais
-let diasSelecionadosAtendimentos = getUltimosQuatroDias(); // Últimos 4 dias por padrão
-let mostrarTodosDiasDashboard = false; // Para a aba Dashboard
-let diasSelecionadosDashboard = getUltimosQuatroDias(); // Últimos 4 dias por padrão
+let mostrarTodosDiasAtendimentos = false;
+let diasSelecionadosAtendimentos = getUltimosQuatroDias();
+let mostrarTodosDiasDashboard = false;
+let diasSelecionadosDashboard = getUltimosQuatroDias();
+
+// Constantes para meta e horários
+const DAILY_GOAL = 30;
+const END_OF_DAY = { hour: 16, minute: 20 };
+const REMINDER_TIME = { hour: 16, minute: 15 };
+const FIRST_OPEN_KEY = 'first_open_today';
+
+// Função para obter a chave do dia atual (YYYY-MM-DD)
+function getTodayKey() {
+    const today = new Date();
+    return `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+}
+
+// Função para contar atendimentos do dia atual
+function countDailyAttendances() {
+    const todayKey = getTodayKey();
+    return atendimentos.filter(atendimento => {
+        const [day, month, year] = atendimento.dataHora.split(' ')[0].split('/');
+        const atendimentoDate = `${year}-${month}-${day}`;
+        return atendimentoDate === todayKey;
+    }).length;
+}
+
+// Função para exibir mensagem no pop-up
+function showPopupMessage(message) {
+    const popup = document.getElementById('popup');
+    const messageElement = document.getElementById('popup-message');
+    messageElement.textContent = message;
+    popup.classList.remove('hidden');
+    setTimeout(closePopup, 5000); // Fecha após 5 segundos
+}
+
+// Função para fechar o pop-up
+function closePopup() {
+    document.getElementById('popup').classList.add('hidden');
+}
+
+// Função para obter a mensagem com base no número de atendimentos
+function getProgressMessage(count) {
+    const remaining = DAILY_GOAL - count;
+    const now = new Date();
+    const isNearEnd = now.getHours() >= 15 && now.getMinutes() >= 30;
+
+    if (remaining > 0 && isNearEnd) {
+        return `Atenção, faltam ${remaining} atendimentos e está perto do final do expediente!`;
+    } else if (remaining > 0) {
+        return `Faltam ${remaining} atendimentos para bater a meta diária!`;
+    } else if (remaining === 0) {
+        return `Pode relaxar, você bateu a meta!`;
+    } else {
+        return `Parabéns! Você bateu a meta e passou ${-remaining} atendimentos!`;
+    }
+}
+
+// Função para verificar a primeira abertura do dia
+function checkFirstOpen() {
+    const todayKey = getTodayKey();
+    const lastOpen = localStorage.getItem(FIRST_OPEN_KEY);
+    if (lastOpen !== todayKey && document.getElementById('checklist').classList.contains('active')) {
+        showPopupMessage('Bom dia, ótimo dia de trabalho e bora bater a meta!');
+        localStorage.setItem(FIRST_OPEN_KEY, todayKey);
+    }
+}
+
+// Função para verificar o horário de lembrete (16:15)
+function checkReminderTime() {
+    const now = new Date();
+    if (now.getHours() === REMINDER_TIME.hour && now.getMinutes() === REMINDER_TIME.minute && document.getElementById('checklist').classList.contains('active')) {
+        const isSaturday = now.getDay() === 6;
+        const message = isSaturday
+            ? 'Seu expediente está chegando ao fim, ótimo final de semana, até segunda!'
+            : 'Seu expediente está chegando ao fim, ótimo descanso!';
+        showPopupMessage(message);
+    }
+}
 
 // Função para obter os últimos 4 dias do mês atual
 function getUltimosQuatroDias() {
@@ -24,7 +99,6 @@ function renderAtendimentosTable() {
     const tableBody = document.getElementById('atendimentosTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
-    // Filtrar atendimentos por dias selecionados
     let filteredAtendimentos = atendimentos;
     if (!mostrarTodosDiasAtendimentos && diasSelecionadosAtendimentos.length > 0) {
         filteredAtendimentos = atendimentos.filter(atendimento => {
@@ -33,7 +107,6 @@ function renderAtendimentosTable() {
         });
     }
 
-    // Determinar quais atendimentos exibir com base na paginação
     let dataToShow = filteredAtendimentos;
     let startIndex = 0;
     if (!showAll) {
@@ -42,9 +115,8 @@ function renderAtendimentosTable() {
         dataToShow = filteredAtendimentos.slice(startIndex, end);
     }
 
-    // Renderizar linhas da tabela
     dataToShow.forEach((atendimento) => {
-        const globalIndex = atendimentos.indexOf(atendimento); // Índice global para remoção
+        const globalIndex = atendimentos.indexOf(atendimento);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${atendimento.tipo}</td>
@@ -55,7 +127,6 @@ function renderAtendimentosTable() {
         tableBody.appendChild(row);
     });
 
-    // Atualizar controles de paginação
     updatePaginationControls(filteredAtendimentos.length);
 }
 
@@ -104,7 +175,7 @@ function nextPage() {
 // Função para alternar entre mostrar todos ou paginar
 function toggleMostrarTodos() {
     showAll = document.getElementById('mostrarTodos').checked;
-    currentPage = 1; // Volta para a primeira página
+    currentPage = 1;
     renderAtendimentosTable();
 }
 
@@ -117,7 +188,7 @@ function filtrarPorDataAtendimentos() {
         diasSelecionadosAtendimentos = [dataFormatada];
         document.getElementById('mostrarTodosDiasAtendimentos').checked = false;
         mostrarTodosDiasAtendimentos = false;
-        currentPage = 1; // Resetar página
+        currentPage = 1;
         renderAtendimentosTable();
     }
 }
@@ -126,11 +197,11 @@ function filtrarPorDataAtendimentos() {
 function toggleMostrarTodosDiasAtendimentos() {
     mostrarTodosDiasAtendimentos = document.getElementById('mostrarTodosDiasAtendimentos').checked;
     if (mostrarTodosDiasAtendimentos) {
-        diasSelecionadosAtendimentos = []; // Limpa filtro de dias
+        diasSelecionadosAtendimentos = [];
     } else {
-        diasSelecionadosAtendimentos = getUltimosQuatroDias(); // Volta para os últimos 4 dias
+        diasSelecionadosAtendimentos = getUltimosQuatroDias();
     }
-    currentPage = 1; // Resetar página
+    currentPage = 1;
     renderAtendimentosTable();
 }
 
@@ -151,9 +222,9 @@ function filtrarPorDataDashboard() {
 function toggleMostrarTodosDiasDashboard() {
     mostrarTodosDiasDashboard = document.getElementById('mostrarTodosDiasDashboard').checked;
     if (mostrarTodosDiasDashboard) {
-        diasSelecionadosDashboard = []; // Limpa filtro de dias
+        diasSelecionadosDashboard = [];
     } else {
-        diasSelecionadosDashboard = getUltimosQuatroDias(); // Volta para os últimos 4 dias
+        diasSelecionadosDashboard = getUltimosQuatroDias();
     }
     atualizarGrafico();
 }
@@ -175,7 +246,6 @@ function limparAtendimentos() {
         mostrarTodosDiasAtendimentos = false;
         diasSelecionadosDashboard = getUltimosQuatroDias();
         document.getElementById('mostrarTodosDiasDashboard').checked = false;
-        mostrarTodosDiasDashboard = false;
     }
 }
 
@@ -186,11 +256,13 @@ function showTabContent(tabId) {
         tabs[i].classList.remove('active');
     }
     document.getElementById(tabId).classList.add('active');
-    localStorage.setItem('activeTab', tabId); // Salvar a aba ativa
+    localStorage.setItem('activeTab', tabId);
     if (tabId === 'atendimentos') {
-        renderAtendimentosTable(); // Atualizar tabela ao mudar para a aba Atendimentos
+        renderAtendimentosTable();
     } else if (tabId === 'dashboard') {
-        atualizarGrafico(); // Atualizar gráfico ao mudar para a aba Dashboard
+        atualizarGrafico();
+    } else if (tabId === 'checklist') {
+        checkFirstOpen(); // Verifica mensagem inicial ao abrir a aba Checklist
     }
 }
 
@@ -206,19 +278,17 @@ window.onload = function() {
     if (activeTab) {
         showTabContent(activeTab);
     } else {
-        showTabContent('checklist'); // Aba padrão
+        showTabContent('checklist');
     }
-    
-    // Carregar atendimentos e atualizar o gráfico e contadores
+
     carregarAtendimentos();
     atualizarGrafico();
     atualizarContadores();
 
-    // Configurar os inputs de data para limitar ao mês atual
     const hoje = new Date();
     const primeiroDia = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     const ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
-    
+
     const filtroDataAtendimentos = document.getElementById('filtroDataAtendimentos');
     if (filtroDataAtendimentos) {
         filtroDataAtendimentos.min = `${primeiroDia.getFullYear()}-${(primeiroDia.getMonth() + 1).toString().padStart(2, '0')}-01`;
@@ -231,7 +301,6 @@ window.onload = function() {
         filtroDataDashboard.max = `${ultimoDia.getFullYear()}-${(ultimoDia.getMonth() + 1).toString().padStart(2, '0')}-${ultimoDia.getDate().toString().padStart(2, '0')}`;
     }
 
-    // Restaurar o estado dos checkboxes
     const mostrarTodosDiasAtendimentosCheckbox = document.getElementById('mostrarTodosDiasAtendimentos');
     if (mostrarTodosDiasAtendimentosCheckbox) {
         mostrarTodosDiasAtendimentosCheckbox.checked = mostrarTodosDiasAtendimentos;
@@ -241,6 +310,9 @@ window.onload = function() {
     if (mostrarTodosDiasDashboardCheckbox) {
         mostrarTodosDiasDashboardCheckbox.checked = mostrarTodosDiasDashboard;
     }
+
+    // Iniciar verificação do horário de lembrete
+    setInterval(checkReminderTime, 60000); // Verifica a cada minuto
 }
 
 // Função para verificar se a data é hoje
@@ -248,9 +320,8 @@ function ehHoje(data) {
     var hoje = new Date();
     var partesData = data.split('/');
     var dia = parseInt(partesData[0], 10);
-    var mes = parseInt(partesData[1], 10) - 1; // Meses em JavaScript são baseados em zero
-    var ano = hoje.getFullYear(); // Considerando que o ano seja o atual
-
+    var mes = parseInt(partesData[1], 10) - 1;
+    var ano = hoje.getFullYear();
     var dataAtendimento = new Date(ano, mes, dia);
     return dataAtendimento.toDateString() === hoje.toDateString();
 }
@@ -275,6 +346,10 @@ function enviarProtocolo(tipo) {
     protocoloInput.value = '';
     atualizarGrafico();
     atualizarContadores();
+
+    // Exibir mensagem de progresso no pop-up
+    const dailyCount = countDailyAttendances();
+    showPopupMessage(getProgressMessage(dailyCount));
 }
 
 // Função para verificar se o protocolo é duplicado
@@ -322,7 +397,6 @@ function atualizarGrafico() {
         var dataHora = atendimentos[i].dataHora.split(' ')[0];
         var dataFormatada = formatarData(dataHora);
 
-        // Filtrar por dias selecionados, se não mostrar todos os dias
         if (!mostrarTodosDiasDashboard && diasSelecionadosDashboard.length > 0 && !diasSelecionadosDashboard.includes(dataFormatada)) {
             continue;
         }
@@ -333,7 +407,6 @@ function atualizarGrafico() {
         datas[dataFormatada]++;
     }
 
-    // Restante do código para desenhar o gráfico
     var svg = document.getElementById('myChart');
     svg.innerHTML = '';
 
@@ -411,12 +484,10 @@ function atualizarContadores() {
 
     var totalGeral = totalInterno + totalExterno;
 
-    // Atualiza os contadores no HTML
     document.getElementById('contadorInterno').innerText = 'Total Interno: ' + totalInterno;
     document.getElementById('contadorExterno').innerText = 'Total Externo: ' + totalExterno;
     document.getElementById('contadorGeral').innerText = 'Total Geral: ' + totalGeral;
 
-    // Calcular e exibir a média de atendimentos diários
     calcularMediaAtendimentos();
 }
 
@@ -446,16 +517,14 @@ function salvarAtendimentos() {
     localStorage.setItem('atendimentos', JSON.stringify(atendimentos));
 }
 
-// Função para gerar o relatório em PDF (sem o gráfico)
+// Função para gerar o relatório em PDF
 function gerarRelatorioPDF() {
     var { jsPDF } = window.jspdf;
     var doc = new jsPDF();
 
-    // Adicionar título
     doc.setFontSize(16);
     doc.text("Relatório de Atendimentos Mensais", 10, 10);
 
-    // Adicionar contadores
     var totalInterno = document.getElementById('contadorInterno').innerText;
     var totalExterno = document.getElementById('contadorExterno').innerText;
     var totalGeral = document.getElementById('contadorGeral').innerText;
@@ -465,7 +534,6 @@ function gerarRelatorioPDF() {
     doc.text(totalExterno, 10, 30);
     doc.text(totalGeral, 10, 40);
 
-    // Adicionar a tabela de atendimentos
     var headers = [["Tipo de Atendimento", "Protocolo", "Data e Hora"]];
     var dados = atendimentos.map(atendimento => [
         atendimento.tipo,
@@ -473,13 +541,11 @@ function gerarRelatorioPDF() {
         atendimento.dataHora
     ]);
 
-    // Adicionar a tabela ao PDF
     doc.autoTable({
         head: headers,
         body: dados,
         startY: 50,
     });
 
-    // Baixar o PDF
     doc.save('Relatorio_Atendimentos_Mensais.pdf');
 }
