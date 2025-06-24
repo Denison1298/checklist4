@@ -22,6 +22,24 @@
             font-size: 16px;
             display: none;
         }
+        #clockContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            z-index: 100;
+        }
+        #clockCanvas {
+            display: block;
+        }
+        #digitalClock, #shiftCountdown {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #4CAF50;
+            background-color: #333;
+            padding: 5px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +59,11 @@
 
     <div id="checklist" class="tab-content active">
         <h2>Checklist de Atendimentos</h2>
+        <div id="clockContainer">
+            <canvas id="clockCanvas" width="100" height="100"></canvas>
+            <div id="digitalClock"></div>
+            <div id="shiftCountdown">Fim do turno: --:--</div>
+        </div>
         <h3>Atendimento Interno</h3>
         <div>
             <input type="text" id="protocoloInterno" placeholder="Digite o protocolo do Atendimento Interno">
@@ -116,7 +139,6 @@
         <p>Desenvolvido por Denison Santos</p>
     </div>
 
-    <!-- Popup para mensagens -->
     <div id="popupMessage"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
