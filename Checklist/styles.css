@@ -410,6 +410,54 @@ th {
     color: var(--primary-color);
 }
 
+/* Estilos para o pop-up */
+.popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+.popup-content {
+    background-color: white;
+    padding: var(--padding-base);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 2px solid var(--primary-color);
+    color: #333;
+    animation: fadeIn 0.5s forwards;
+}
+
+.popup-content button {
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    align-self: flex-end;
+    font-size: 0.875rem;
+}
+
+.popup-content button:hover {
+    background-color: var(--primary-color-hover);
+    color: white;
+}
+
+.popup-content button:focus, .popup-content button:focus-visible {
+    outline: 3px solid var(--secondary-color);
+}
+
+.hidden {
+    display: none;
+}
+
 /* Media Queries para dispositivos móveis */
 @media (max-width: 768px) {
     .logo {
@@ -437,6 +485,12 @@ th {
 
     .pagination-controls label {
         font-size: 0.875rem;
+    }
+
+    .popup {
+        max-width: 90%;
+        right: 10px;
+        top: 10px;
     }
 }
 
@@ -474,5 +528,21 @@ th {
 
     .pagination span {
         font-size: 0.875rem;
+    }
+
+    .popup {
+        max-width: 90%;
+        right: 5px;
+        top: 5px;
+    }
+
+    .popup-content {
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+
+    .popup-content button {
+        font-size: 0.75rem;
+        padding: 4px 8px;
     }
 }
